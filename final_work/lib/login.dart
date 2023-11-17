@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lottie/lottie.dart';
 import 'model/model_auth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,17 +16,24 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: Container(
+        color: const Color(0xFF01C1FD),
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           children: <Widget>[
             const SizedBox(height: 80.0),
             Column(
               children: <Widget>[
-                Image.asset('assets/diamond.png'),
+                Lottie.asset('assets/bear.json'),
+                Text(
+                  "Kupyer Running Club",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30.0, // 원하는 폰트 크기로 조정
+                  ),
+                ),
                 const SizedBox(height: 16.0),
-                const Text('Login'),
-                SizedBox(height: 200,),
+                // SizedBox(height: 200,),
                 Container(
                   width: 200,
                   height: 50,
