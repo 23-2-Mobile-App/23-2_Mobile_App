@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -17,16 +19,21 @@ class _MapScreenState extends State<MapScreen> {
   Set<Polyline> _polylines = {};
   List<LatLng> _polylineCoordinates = [];
   late StreamSubscription<Position> _locationSubscription;
+  String? userEmail;
 
   @override
   void initState() {
     super.initState();
     _locationSubscription = Geolocator.getPositionStream(
       desiredAccuracy: LocationAccuracy.best,
-      distanceFilter: 10, // set your desired distance filter
+      distanceFilter: 10,
     ).listen((Position position) {
       _onLocationChanged(position);
     });
+
+    _getCurrentLocation(); // 초기에 현재 위치 가져오기
+
+    _getUserEmail();
   }
 
   void _onLocationChanged(Position position) {
@@ -39,7 +46,7 @@ class _MapScreenState extends State<MapScreen> {
         Marker(
           markerId: MarkerId('userLocation'),
           position: newPosition,
-          infoWindow: InfoWindow(title: 'Your Location'),
+          infoWindow: InfoWindow(title: 'Your Location', snippet: userEmail ?? ''),
         ),
       );
     });
@@ -55,19 +62,12 @@ class _MapScreenState extends State<MapScreen> {
     _polylines.clear();
     _polylines.add(
       Polyline(
-        polylineId: PolylineId('userPath'),
+        polylineId: const PolylineId('userPath'),
         color: Colors.blue,
         points: _polylineCoordinates,
         width: 5,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _locationSubscription.cancel();
-    super.dispose();
   }
 
   Future<void> _getCurrentLocation() async {
@@ -94,7 +94,7 @@ class _MapScreenState extends State<MapScreen> {
         Marker(
           markerId: MarkerId('userLocation'),
           position: LatLng(position.latitude, position.longitude),
-          infoWindow: InfoWindow(title: 'Your Location'),
+          infoWindow: InfoWindow(title: 'Your Location', snippet: userEmail ?? ''),
         ),
       );
     });
@@ -110,6 +110,22 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
+  void _getUserEmail() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      userEmail = user.email;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _locationSubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -117,8 +133,8 @@ class _MapScreenState extends State<MapScreen> {
         children: [
           GoogleMap(
             onMapCreated: (controller) => _controller = controller,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(37.532600, 127.024612), // 서울 시청 위치
+            initialCameraPosition: const CameraPosition(
+              target: LatLng(37.532600, 127.024612), // 초기 위치를 서울 시청으로 설정
               zoom: 18,
             ),
             myLocationEnabled: _myLocationEnabled,
@@ -129,7 +145,7 @@ class _MapScreenState extends State<MapScreen> {
           Center(
             child: Column(
               children: [
-                SizedBox(height: 100),
+                const SizedBox(height: 100),
                 SizedBox(
                   width: 400.0,
                   height: 200.0,
@@ -139,26 +155,44 @@ class _MapScreenState extends State<MapScreen> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Center(
-                      child: Text(
-                        'info',
-                        style: TextStyle(
+                      child:
+                      Text(
+                        userEmail ?? 'Anonymous', // 여기에 사용자 이메일 또는 'Anonymous' 표시
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
+                          fontSize: 12, // 글씨체 크기 12
                         ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 300),
-                Image.asset(
-                  'assets/start_run.png',
-                  height: 100.0,
-                  width: 100.0,
+                const SizedBox(height: 300),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/countdownPage',
+                    );
+                  },
+                  child: Image.asset(
+                    'assets/start_run.png',
+                    height: 100.0,
+                    width: 100.0,
+                  ),
                 ),
-                Image.asset(
-                  'assets/start.png',
-                  height: 60.0,
-                  width: 60.0,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/countdownPage',
+                    );
+                  },
+                  child: Image.asset(
+                    'assets/start.png',
+                    height: 60.0,
+                    width: 60.0,
+                  ),
                 ),
               ],
             ),
@@ -196,4 +230,3 @@ class MarkerDetailScreen extends StatelessWidget {
     );
   }
 }
-
