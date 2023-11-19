@@ -9,6 +9,8 @@ dependencies:
   flutter:
     sdk: flutter
   google_sign_in: ^6.1.6
+  geolocator: ^7.6.2
+
 
   intl: ^0.17.0
 
@@ -27,6 +29,7 @@ dependencies:
   http: ^1.1.0
   json_serializable: ^6.7.1
   json_annotation: ^4.8.1
+  lottie: ^2.7.0
 
 
 
@@ -36,7 +39,6 @@ dev_dependencies:
   flutter_lints: ^1.0.0
   intl: ^0.17.0
   url_launcher: ^6.1.14
-  lottie: 2.6.0
   build_runner: ^2.4.6
 
 
@@ -45,6 +47,9 @@ flutter:
   uses-material-design: true
   assets:
     - assets/diamond.png
+    - assets/start_run.png
+    - assets/start.png
+    - assets/bear.json
 
 
 

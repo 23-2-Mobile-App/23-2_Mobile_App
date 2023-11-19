@@ -14,6 +14,8 @@ class HomePage extends StatefulWidget {
 
   @override
   State<HomePage> createState() => _HomePageState();
+
+
 }
 
 class _HomePageState extends State<HomePage> {
@@ -221,7 +223,6 @@ class _HomePageState extends State<HomePage> {
                                 builder: (context,productProvider,child) {
                                   return Consumer<WishlistProvider>(
                                     builder: (context,wishlistProvider,_) {
-                                      print("KOREA");
                                       return GridView.count(
                                         crossAxisCount: 2,
                                         padding: const EdgeInsets.all(16.0),

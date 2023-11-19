@@ -17,7 +17,9 @@ import 'package:shrine/detail.dart';
 import 'package:shrine/add.dart';
 import 'package:shrine/edit.dart';
 import 'package:shrine/profile.dart';
+import 'package:shrine/runPage.dart';
 import 'package:shrine/wish_list.dart';
+import 'countdown.dart';
 import 'login.dart';
 import 'map.dart';
 import 'home.dart';
@@ -40,6 +42,8 @@ class ShrineApp extends StatelessWidget {
         '/editPage' : (BuildContext context) => const EditPage(),
         '/profilePage' : (BuildContext context) => const ProfilePage(),
         '/wishlistPage' : (BuildContext context) => const WishListPage(),
+        '/countdownPage' : (BuildContext context) => const CountdownPage(),
+        '/runPage' : (BuildContext context) => const RunPage(),
       },
       // TODO: Customize the theme (103)
       theme: ThemeData.light(useMaterial3: true),
