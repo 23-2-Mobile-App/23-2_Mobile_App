@@ -50,6 +50,9 @@ flutter:
     - assets/start_run.png
     - assets/start.png
     - assets/bear.json
+    - assets/runner.png
+    - assets/sweat.png
+    - assets/cheetah.png
 
 
 
