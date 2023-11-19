@@ -128,7 +128,7 @@ class _RunPageState extends State<RunPage> {
 
       final cameraPosition = CameraPosition(
         target: LatLng(position.latitude, position.longitude),
-        zoom: 15,
+        zoom: 17,
       );
 
       // Update the map camera
