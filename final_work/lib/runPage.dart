@@ -110,7 +110,7 @@ class _RunPageState extends State<RunPage> {
                   ),
                   SizedBox(width: 70,),
                   Text(
-                    "- -",
+                    " - -",
                     style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black,fontStyle: FontStyle.italic),
                   ),
                 ],
@@ -133,12 +133,17 @@ class _RunPageState extends State<RunPage> {
       ),
     );
   }
-
   String _formatTime(double seconds) {
     int minutes = (seconds / 60).floor();
     int remainingSeconds = (seconds % 60).floor();
-    return '$minutes:$remainingSeconds';
+
+    // Use the `String.padLeft` method to add leading zeros
+    String formattedMinutes = minutes.toString().padLeft(2, '0');
+    String formattedSeconds = remainingSeconds.toString().padLeft(2, '0');
+
+    return '$formattedMinutes:$formattedSeconds';
   }
+
 
 
 

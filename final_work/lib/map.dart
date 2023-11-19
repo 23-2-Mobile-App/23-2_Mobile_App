@@ -24,6 +24,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
+
     _locationSubscription = Geolocator.getPositionStream(
       desiredAccuracy: LocationAccuracy.best,
       distanceFilter: 10,
@@ -31,7 +32,13 @@ class _MapScreenState extends State<MapScreen> {
       _onLocationChanged(position);
     });
 
-    _getCurrentLocation(); // 초기에 현재 위치 가져오기
+    // Call _getCurrentLocation() when the widget is first created
+    _getCurrentLocation();
+
+    // Use a timer to call _getCurrentLocation() every 10 seconds
+    Timer.periodic(Duration(seconds: 10), (Timer timer) {
+      _getCurrentLocation();
+    });
 
     _getUserEmail();
   }
@@ -113,20 +120,22 @@ class _MapScreenState extends State<MapScreen> {
     _locationSubscription.cancel();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: Stack(
         children: [
           GoogleMap(
-            onMapCreated: (controller) => _controller = controller,
+            onMapCreated: (controller) {
+              _controller = controller;
+              _getCurrentLocation(); // Call _getCurrentLocation() when the map is created
+            },
             initialCameraPosition: const CameraPosition(
-              target: LatLng(37.532600, 127.024612), // 초기 위치를 서울 시청으로 설정
+              target: LatLng(37.532600, 127.024612),
               zoom: 18,
             ),
             myLocationEnabled: _myLocationEnabled,
-            myLocationButtonEnabled: false,
+            myLocationButtonEnabled: true, // Enable the my location button
             markers: _markers,
             polylines: _polylines,
           ),
@@ -220,3 +229,4 @@ class MarkerDetailScreen extends StatelessWidget {
     );
   }
 }
+

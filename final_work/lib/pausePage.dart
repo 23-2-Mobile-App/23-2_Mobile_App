@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PausePage extends StatefulWidget {
   const PausePage({Key? key}) : super(key: key);
@@ -22,9 +21,12 @@ class _PausePageState extends State<PausePage> {
   late StreamSubscription<Position> _locationSubscription;
   String? userEmail;
 
+  Completer<GoogleMapController> _controllerCompleter = Completer();
+
   @override
   void initState() {
     super.initState();
+
     _locationSubscription = Geolocator.getPositionStream(
       desiredAccuracy: LocationAccuracy.best,
       distanceFilter: 10,
@@ -32,46 +34,60 @@ class _PausePageState extends State<PausePage> {
       _onLocationChanged(position);
     });
 
-    _getCurrentLocation(); // 초기에 현재 위치 가져오기
+    // Call _getCurrentLocation() when the widget is first created
+    _getCurrentLocation();
+
+    // Use a timer to call _getCurrentLocation() every 10 seconds
+    Timer.periodic(Duration(seconds: 10), (Timer timer) {
+      _getCurrentLocation();
+    });
 
     _getUserEmail();
   }
 
   void _onLocationChanged(Position position) {
-    final LatLng newPosition = LatLng(position.latitude, position.longitude);
+    if (mounted) { // Check if the widget is still mounted
+      final LatLng newPosition = LatLng(position.latitude, position.longitude);
 
-    // Update the marker position
-    setState(() {
-      _markers.clear();
-      _markers.add(
-        Marker(
-          markerId: MarkerId('userLocation'),
-          position: newPosition,
-          infoWindow: InfoWindow(title: 'Your Location', snippet: userEmail ?? ''),
-        ),
-      );
-    });
+      // Update the marker position
+      setState(() {
+        _markers.clear();
+        _markers.add(
+          Marker(
+            markerId: MarkerId('userLocation'),
+            position: newPosition,
+            infoWindow: InfoWindow(title: 'Your Location', snippet: userEmail ?? ''),
+          ),
+        );
+      });
 
-    // Add the current location to the polyline
-    _polylineCoordinates.add(newPosition);
+      // Add the current location to the polyline
+      _polylineCoordinates.add(newPosition);
 
-    // Update the polylines on the map
-    _updatePolylines();
+      // Update the polylines on the map
+      _updatePolylines();
+    }
   }
 
   void _updatePolylines() {
-    _polylines.clear();
-    _polylines.add(
-      Polyline(
-        polylineId: const PolylineId('userPath'),
-        color: Colors.blue,
-        points: _polylineCoordinates,
-        width: 5,
-      ),
-    );
+    if (mounted) { // Check if the widget is still mounted
+      setState(() {
+        _polylines.clear();
+        _polylines.add(
+          Polyline(
+            polylineId: const PolylineId('userPath'),
+            color: Colors.blue,
+            points: _polylineCoordinates,
+            width: 5,
+          ),
+        );
+      });
+    }
   }
-
   Future<void> _getCurrentLocation() async {
+    // Wait for the controller to be initialized
+    final GoogleMapController controller = await _controllerCompleter.future;
+
     Position position;
     try {
       position = await Geolocator.getCurrentPosition();
@@ -86,7 +102,7 @@ class _PausePageState extends State<PausePage> {
     );
 
     // Update the map camera
-    _controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     // Update the marker position
     setState(() {
@@ -121,19 +137,17 @@ class _PausePageState extends State<PausePage> {
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    _locationSubscription.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+
     return CupertinoPageScaffold(
       child: Stack(
         children: [
           GoogleMap(
-            onMapCreated: (controller) => _controller = controller,
+            onMapCreated: (controller) {
+              _controller = controller;
+              _controllerCompleter.complete(controller);
+              _getCurrentLocation(); // Call _getCurrentLocation() when the map is created
+            },
             initialCameraPosition: const CameraPosition(
               target: LatLng(37.532600, 127.024612),
               zoom: 18,

@@ -5,11 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PausePage extends StatefulWidget {
-  const PausePage({Key? key}) : super(key: key);
-
   @override
   _PausePageState createState() => _PausePageState();
 }
@@ -23,6 +20,8 @@ class _PausePageState extends State<PausePage> {
   late StreamSubscription<Position> _locationSubscription;
   String? userEmail;
 
+  Completer<GoogleMapController> _controllerCompleter = Completer();
+
   @override
   void initState() {
     super.initState();
@@ -32,8 +31,6 @@ class _PausePageState extends State<PausePage> {
     ).listen((Position position) {
       _onLocationChanged(position);
     });
-
-    _getCurrentLocation(); // 초기에 현재 위치 가져오기
 
     _getUserEmail();
   }
@@ -57,22 +54,12 @@ class _PausePageState extends State<PausePage> {
     _polylineCoordinates.add(newPosition);
 
     // Update the polylines on the map
-    _updatePolylines();
-  }
-
-  void _updatePolylines() {
-    _polylines.clear();
-    _polylines.add(
-      Polyline(
-        polylineId: const PolylineId('userPath'),
-        color: Colors.blue,
-        points: _polylineCoordinates,
-        width: 5,
-      ),
-    );
   }
 
   Future<void> _getCurrentLocation() async {
+    // Wait for the controller to be initialized
+    final GoogleMapController controller = await _controllerCompleter.future;
+
     Position position;
     try {
       position = await Geolocator.getCurrentPosition();
@@ -83,11 +70,11 @@ class _PausePageState extends State<PausePage> {
 
     final cameraPosition = CameraPosition(
       target: LatLng(position.latitude, position.longitude),
-      zoom: 14,
+      zoom: 18,
     );
 
     // Update the map camera
-    _controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     // Update the marker position
     setState(() {
@@ -105,7 +92,6 @@ class _PausePageState extends State<PausePage> {
     _polylineCoordinates.add(LatLng(position.latitude, position.longitude));
 
     // Update the polylines on the map
-    _updatePolylines();
 
     setState(() {
       _myLocationEnabled = true;
@@ -122,35 +108,30 @@ class _PausePageState extends State<PausePage> {
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    _locationSubscription.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: Stack(
         children: [
           GoogleMap(
-            onMapCreated: (controller) => _controller = controller,
+            onMapCreated: (controller) {
+              _controller = controller;
+              _controllerCompleter.complete(controller);
+              _getCurrentLocation(); // Call _getCurrentLocation() when the map is created
+            },
             initialCameraPosition: const CameraPosition(
-              target: LatLng(37.532600, 127.024612), // 초기 위치를 서울 시청으로 설정
+              target: LatLng(37.532600, 127.024612),
               zoom: 18,
             ),
             myLocationEnabled: _myLocationEnabled,
-            myLocationButtonEnabled: false,
+            myLocationButtonEnabled: true, // Enable the my location button
             markers: _markers,
             polylines: _polylines,
           ),
           Center(
             child: Column(
               children: [
-
                 const SizedBox(height: 600),
                 SizedBox(
-
                   width: 400.0,
                   height: 250.0,
                   child: Container(
@@ -158,8 +139,7 @@ class _PausePageState extends State<PausePage> {
                       color: Colors.white.withOpacity(0.9),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child:
-                    Column(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(width: 30,),
@@ -179,7 +159,11 @@ class _PausePageState extends State<PausePage> {
                             ),
                             const SizedBox(width: 10,),
                             IconButton(
-                                icon: const Icon(Icons.play_arrow,size: 60,),
+                              icon: const Icon(Icons.play_arrow,size: 60,),
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                                icon: const Icon(Icons.stop,size: 60,),
                                 onPressed: () {}
                             ),
                             IconButton(
@@ -189,58 +173,58 @@ class _PausePageState extends State<PausePage> {
                             ),
                           ],
                         ),
-                    Container(
-                      width: 350,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.black12.withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child:  Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Image.asset('assets/runner.png',width: 30,height: 30),
-                             const DefaultTextStyle(
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('10.9km',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
-                                  Text('distance',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
-                                ],
-                              ), // check km
-                            ),
-                            const VerticalDivider(
-                                color: Color.fromARGB(255, 211, 211, 211),
-                                thickness: 1.0),
-                            Image.asset('assets/sweat.png',width: 30,height: 30),
-                            const DefaultTextStyle(
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('5:20',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
-                                  Text('Time',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
-                                ],
-                              ), // check km
-                            ),
-                            const VerticalDivider(
-                                color: Color.fromARGB(255, 211, 211, 211),
-                                thickness: 1.0),
-                            Image.asset('assets/cheetah.png',width:30,height:30),
-                            const DefaultTextStyle(
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('5\'20\'\'',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
-                                  Text('pace',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
-                                ],
-                              ), // check km
-                            ),
-                          ],
+                        Container(
+                          width: 350,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.black12.withOpacity(0.7),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child:  Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset('assets/runner.png',width: 30,height: 30),
+                              const DefaultTextStyle(
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('10.9km',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
+                                    Text('distance',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
+                                  ],
+                                ), // check km
+                              ),
+                              const VerticalDivider(
+                                  color: Color.fromARGB(255, 211, 211, 211),
+                                  thickness: 1.0),
+                              Image.asset('assets/sweat.png',width: 30,height: 30),
+                              const DefaultTextStyle(
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('5:20',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
+                                    Text('Time',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
+                                  ],
+                                ), // check km
+                              ),
+                              const VerticalDivider(
+                                  color: Color.fromARGB(255, 211, 211, 211),
+                                  thickness: 1.0),
+                              Image.asset('assets/cheetah.png',width:30,height:30),
+                              const DefaultTextStyle(
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('5\'20\'\'',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
+                                    Text('pace',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
+                                  ],
+                                ), // check km
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
                       ],
                     ),
 
@@ -282,3 +266,4 @@ class MarkerDetailScreen extends StatelessWidget {
     );
   }
 }
+
