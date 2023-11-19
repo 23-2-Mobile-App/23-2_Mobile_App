@@ -55,20 +55,9 @@ class _MapScreenState extends State<MapScreen> {
     _polylineCoordinates.add(newPosition);
 
     // Update the polylines on the map
-    _updatePolylines();
+
   }
 
-  void _updatePolylines() {
-    _polylines.clear();
-    _polylines.add(
-      Polyline(
-        polylineId: const PolylineId('userPath'),
-        color: Colors.blue,
-        points: _polylineCoordinates,
-        width: 5,
-      ),
-    );
-  }
 
   Future<void> _getCurrentLocation() async {
     Position position;
@@ -103,7 +92,6 @@ class _MapScreenState extends State<MapScreen> {
     _polylineCoordinates.add(LatLng(position.latitude, position.longitude));
 
     // Update the polylines on the map
-    _updatePolylines();
 
     setState(() {
       _myLocationEnabled = true;
@@ -156,12 +144,14 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     child: Center(
                       child:
-                      Text(
-                        userEmail ?? 'Anonymous', // 여기에 사용자 이메일 또는 'Anonymous' 표시
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12, // 글씨체 크기 12
+                      DefaultTextStyle(
+                        style: TextStyle(fontSize: 80, fontWeight: FontWeight.bold, color: Colors.black, fontStyle: FontStyle.italic),
+                        child: Text(userEmail ?? 'Anonymous',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12, // 글씨체 크기 12
+                          ),
                         ),
                       ),
                     ),
