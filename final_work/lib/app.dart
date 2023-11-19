@@ -16,11 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:shrine/detail.dart';
 import 'package:shrine/add.dart';
 import 'package:shrine/edit.dart';
-<<<<<<< Updated upstream
 import 'package:shrine/pausePage.dart';
-=======
-import 'package:shrine/pause.dart';
->>>>>>> Stashed changes
 import 'package:shrine/profile.dart';
 import 'package:shrine/runPage.dart';
 import 'package:shrine/wish_list.dart';

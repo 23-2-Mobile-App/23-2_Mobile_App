@@ -145,11 +145,7 @@ class _MapScreenState extends State<MapScreen> {
                     child: Center(
                       child:
                       DefaultTextStyle(
-<<<<<<< Updated upstream
                         style: TextStyle(fontSize: 80, fontWeight: FontWeight.bold, color: Colors.black, fontStyle: FontStyle.italic),
-=======
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black, fontStyle: FontStyle.italic),
->>>>>>> Stashed changes
                         child: Text(userEmail ?? 'Anonymous',
                           style: const TextStyle(
                             color: Colors.white,
