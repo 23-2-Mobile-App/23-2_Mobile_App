@@ -112,48 +112,6 @@ class _RunPageState extends State<RunPage> {
     }
   }
   // Future<void> _getCurrentLocation() async {
-  //   // Wait for the controller to be initialized
-  //   final GoogleMapController controller = await _controllerCompleter.future;
-  //
-  //   Position position;
-  //   try {
-  //     position = await Geolocator.getCurrentPosition();
-  //   } catch (e) {
-  //     print("Error getting current location: $e");
-  //     return;
-  //   }
-  //
-  //   final cameraPosition = CameraPosition(
-  //     target: LatLng(position.latitude, position.longitude),
-  //     zoom: 18,
-  //   );
-  //
-  //   // Update the map camera
-  //   controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-  //
-  //   // Update the marker position
-  //   setState(() {
-  //     _markers.clear();
-  //     _markers.add(
-  //       Marker(
-  //         markerId: MarkerId('userLocation'),
-  //         position: LatLng(position.latitude, position.longitude),
-  //         infoWindow: InfoWindow(title: 'Your Location', snippet: userEmail ?? ''),
-  //       ),
-  //     );
-  //   });
-  //
-  //   // Add the current location to the polyline
-  //   _polylineCoordinates.add(LatLng(position.latitude, position.longitude));
-  //
-  //   // Update the polylines on the map
-  //   _updatePolylines();
-  //
-  //   setState(() {
-  //     _myLocationEnabled = true;
-  //   });
-  // }
-
   Future<void> _getCurrentLocation() async {
     try {
       // Wait for the controller to be initialized
@@ -253,7 +211,7 @@ class _RunPageState extends State<RunPage> {
             ),
             myLocationEnabled: _myLocationEnabled,
             myLocationButtonEnabled: false,
-            markers: _markers,
+            // markers: _markers,
             polylines: _polylines,
           ),
 

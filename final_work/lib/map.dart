@@ -136,7 +136,7 @@ class _MapScreenState extends State<MapScreen> {
             ),
             myLocationEnabled: _myLocationEnabled,
             myLocationButtonEnabled: true, // Enable the my location button
-            markers: _markers,
+            // markers: _markers,
             polylines: _polylines,
           ),
           Center(
