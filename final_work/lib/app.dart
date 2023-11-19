@@ -16,9 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:shrine/detail.dart';
 import 'package:shrine/add.dart';
 import 'package:shrine/edit.dart';
-import 'package:shrine/pausePage.dart';
-import 'package:shrine/profile.dart';
 import 'package:shrine/runPage.dart';
+import 'package:shrine/profile.dart';
+
+import 'package:shrine/savePage.dart';
 import 'package:shrine/wish_list.dart';
 import 'countdown.dart';
 import 'login.dart';
@@ -45,7 +46,7 @@ class ShrineApp extends StatelessWidget {
         '/wishlistPage' : (BuildContext context) => const WishListPage(),
         '/countdownPage' : (BuildContext context) => const CountdownPage(),
         '/runPage' : (BuildContext context) => const RunPage(),
-        '/pausePage' : (BuildContext context) => const PausePage(),
+        '/savePage' : (BuildContext context) => const SavePage(),
       },
       // TODO: Customize the theme (103)
       theme: ThemeData.light(useMaterial3: true),

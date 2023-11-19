@@ -26,8 +26,8 @@ class _CountdownPageState extends State<CountdownPage> {
         if (count == 0) {
           timer.cancel();
           Navigator.pop(context);
-          Navigator.pushNamed(context,'/pausePage');
           Navigator.pushNamed(context,'/runPage');
+          // Navigator.pushNamed(context,'/runPage');
         } else {
           setState(() {
             count--;
