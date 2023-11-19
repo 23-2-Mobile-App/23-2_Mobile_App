@@ -104,7 +104,7 @@ class FirebaseAuthProvider with ChangeNotifier {
         'uid': user?.uid,
         'email': user?.email,
         'name': user?.displayName,
-        'status_message': "I promise to take the test honestly before GOD.",
+        'height': "I promise to take the test honestly before GOD.",
       });
       await userDoc.collection('wish_list').add({
       });
