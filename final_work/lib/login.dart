@@ -24,7 +24,10 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 80.0),
             Column(
               children: <Widget>[
-                Lottie.asset('assets/bear.json'),
+                LottieBuilder.asset(
+                  'assets/bear.json',
+                  animate: true, // Auto-play the animation
+                ),
                 Text(
                   "Kupyer Running Club",
                   style: TextStyle(
@@ -47,24 +50,8 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text('GOOGLE'),
                   ),
                 ),
-                SizedBox(height: 20),
-                Container(
-                  width: 200,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await _authProvider.signInAnonymously();
-                      if (_authProvider.errorMessage != null) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: Text('Guest'),
-                  ),
-                ),
-                SizedBox(height: 20),
               ],
             ),
-            const SizedBox(height: 120.0),
           ],
         ),
       ),

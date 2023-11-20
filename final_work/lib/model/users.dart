@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class User {
+class Users {
   late String uid;
   late String email;
   late int sum_distance;
@@ -9,7 +9,7 @@ class User {
   late int user_image;
   late String user_name;
 
-  User({
+  Users({
     required this.uid,
     required this.email,
     required this.sum_distance,
@@ -20,10 +20,10 @@ class User {
   });
 
 
-  factory User.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
+  factory Users.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     print(data['modified_user_name'] );
-    return User(
+    return Users(
       uid: doc.id,
       email: data['email'] ?? '',
       sum_distance: data['sum_distance'] ?? '',

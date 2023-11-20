@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Record {
   late String uid;
-  late String date;
+  late Timestamp date;
   late int distance;
   late int pace;
-  late String time;
+  late int time;
   late String imgURL;
 
   Record({
@@ -20,12 +20,14 @@ class Record {
 
   factory Record.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    Timestamp dateTimestamp = data['date'] as Timestamp;
+    DateTime dateTime = dateTimestamp.toDate();
     return Record(
       uid: doc.id,
-      date: data['date'] ?? '',
-      distance: data['distance'] ?? '',
-      pace: data['pace'] ?? '',
-      time: data['time'] ?? '',
+      date: dateTimestamp,
+      distance: data['distance'] ?? 0,
+      pace: data['pace'] ?? 0,
+      time: data['time'] ?? 0,
       imgURL: '',
     );
   }

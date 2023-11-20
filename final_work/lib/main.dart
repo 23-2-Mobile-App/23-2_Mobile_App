@@ -18,9 +18,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'app.dart';
 import 'model/model_auth.dart';
-import 'model/model_item_provider.dart';
-import 'model/model_wish.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'model/model_record.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,9 +36,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ProductProvider()),
         ChangeNotifierProvider(create: (context) => FirebaseAuthProvider()),
-        ChangeNotifierProvider(create: (context) => WishlistProvider()),
+        ChangeNotifierProvider(create: (context) => RecordProvider()),
       ],
       child: const ShrineApp(),
     );

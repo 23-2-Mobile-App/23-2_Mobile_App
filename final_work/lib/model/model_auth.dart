@@ -22,13 +22,15 @@ class FirebaseAuthProvider with ChangeNotifier {
         return false;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser
+          .authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      UserCredential userCredential = await _auth.signInWithCredential(
+          credential);
       User? user = userCredential.user;
 
       // Check if the user document exists, if not, create it
@@ -43,58 +45,9 @@ class FirebaseAuthProvider with ChangeNotifier {
     }
   }
 
-
-  Future<void> signInAnonymously() async {
-    try {
-      await _auth.signInAnonymously();
-
-      // Check if the user document exists, if not, create it
-      await _createOrUpdateAnoDocument(currentUser);
-
-      print("익명 로그인 성공!");
-      notifyListeners();
-    } catch (e) {
-      print("익명 로그인 실패: $e");
-      errorMessage = "구글 로그인에 실패했습니다: $e";
-    }
+  String? getUsername() {
+    return currentUser?.displayName;
   }
-
-  Future<void> _createOrUpdateAnoDocument(User? user) async {
-    try {
-      if (user?.uid == null || user!.uid.isEmpty) {
-        // 사용자 UID가 null이거나 비어 있는 경우 처리
-        print("사용자 UID가 null 또는 비어 있습니다.");
-        return;
-      }
-
-      final userDoc = FirebaseFirestore.instance.collection('users').doc(user!.uid);
-
-      if (!(await userDoc.get()).exists) {
-        // 사용자 문서가 없으면 초기 값으로 생성
-        await userDoc.set({
-          'uid': user.uid,
-          'status_message': "I promise to take the test honestly before GOD..",
-        });
-        await userDoc.collection('wish_list').add({
-          'item': 'default_item',
-        });
-      } else {
-        // 사용자 문서가 이미 존재하면 최신 정보로 업데이트
-        // 업데이트하기 전에 이메일과 이름이 존재하는지 확인
-        if (user.email != null && user.displayName != null) {
-          await userDoc.update({
-            'email': user.email,
-            'name': user.displayName,
-          });
-        }
-      }
-      notifyListeners();
-    } catch (e) {
-      // 예외 처리: 오류 메시지 출력 또는 적절한 조치 수행
-      print("_createOrUpdateAnoDocument에서 오류 발생: $e");
-    }
-  }
-
   Future<void> _createOrUpdateUserDocument(User? user) async {
     final userDoc = FirebaseFirestore.instance.collection('users').doc(user?.uid);
 
@@ -103,22 +56,25 @@ class FirebaseAuthProvider with ChangeNotifier {
       await userDoc.set({
         'uid': user?.uid,
         'email': user?.email,
-        'name': user?.displayName,
-        'height': "I promise to take the test honestly before GOD.",
-      });
-      await userDoc.collection('wish_list').add({
+        'user_name': user?.displayName,
+        'sum_distance': "100",
+        'sum_time': "100",
+        'user_RC': "100",
+        'user_image': "100",
       });
     } else {
       // If the user document already exists, update it with the latest information
       await userDoc.update({
         'email': user?.email,
         'name': user?.displayName,
+        'sum_distance': "100",
+        'sum_time': "100",
+        'user_RC': "100",
+        'user_image': "100",
       });
     }
     notifyListeners();
   }
-
-
 
   Future<void> signOut() async {
     try {
@@ -132,4 +88,5 @@ class FirebaseAuthProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
 }

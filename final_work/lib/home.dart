@@ -4,247 +4,260 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'model/model_item_provider.dart';
-import 'model/model_product.dart';
-import 'model/model_wish.dart';
 import 'model/model_auth.dart';
+import 'model/model_record.dart';
+import 'model/record.dart';
+import 'model/users.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
-
-
 }
 
 class _HomePageState extends State<HomePage> {
-
   FirebaseAuthProvider _firebaseAuthProvider = FirebaseAuthProvider();
-
-  String _selectedOrder = 'asc'; // Default to ascending order
-  List<Product> products = [];
-  bool _isMounted = false; // Add this variable
-
-
-  @override
-  void initState() {
-    super.initState();
-    _isMounted = true;
-
-    // Listen to changes in authentication state
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      // If the authentication state changes and the widget is still mounted, rebuild the widget
-      if (_isMounted) {
-        setState(() {});
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _isMounted = false; // Set it to false when the widget is disposed
-    super.dispose();
-  }
-
-  Future<List<Widget>> _buildGridCards(BuildContext context) async {
-    ProductProvider productProvider = Provider.of<ProductProvider>(context);
-    List<Product> products = await productProvider.fetchProducts(_selectedOrder);
-    WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context, listen: false);
-
-    if (products.isEmpty) {
-      return <Widget>[]; // 빈 리스트를 반환합니다.
-    }
-    final ThemeData theme = Theme.of(context);
-    final NumberFormat formatter = NumberFormat.simpleCurrency(
-        locale: Localizations.localeOf(context).toString());
-    List<Widget> cards = [];
-    for (Product product in products) {
-      bool isInWishlist = await wishlistProvider.isItemInWishlist(product.id, _firebaseAuthProvider.currentUser?.uid ?? '');
-      Widget card = Card(
-        clipBehavior: Clip.antiAlias,
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 18 / 11,
-                  child: Image.network(product.imgUrl),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        product.name,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      const SizedBox(height: 8.0),
-                      Text(
-                        product.description,
-                        maxLines: 2,
-                        style: TextStyle(fontSize: 14),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      formatter.format(product.price),
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/detailPage',
-                          arguments: product,
-                        );
-                      },
-                      child: Text(
-                        'more',
-                        style: TextStyle(color: Colors.blue, fontSize: 14),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Positioned(
-              top: 8.0,
-              right: 8.0,
-              child: isInWishlist
-                  ? Icon(
-                Icons.check_box,
-                color: Colors.green,
-              )
-                  : SizedBox(), // Display checkbox only if the item is in the wishlist
-            ),
-          ],
-        ),
-      );
-      cards.add(card); // 생성된 Card 위젯을 리스트에 추가합니다.
-    }
-    return cards; // Card 위젯이 담긴 리스트를 반환합니다.
-  }
-
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProductProvider>(
-      builder: (context,productProvider, child) {
-        return Consumer<WishlistProvider>(
-          builder: (context,wishlistProvider,child) {
-            return SafeArea(
-              child: Scaffold(
-                appBar: AppBar(
-                  title: Row(
+    return Consumer<RecordProvider>(
+      builder: (context, recordProvider, child) {
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: const Color(0xFF01C1FD),
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(25.0, 40.0, 16.0, 16.0),
+                  child: Row(
                     children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.account_circle, // 프로필 아이콘
-                          semanticLabel: 'profile',
-                        ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/profilePage');
-                        },
+                      Image.asset(
+                        'assets/eagle.png',
+                        width: 50,
+                        height: 50,
                       ),
-                      SizedBox(width: 130,),
-                      Text('Main'),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '안녕하세요, ${_firebaseAuthProvider.getUsername() ?? ''} 님',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                            Text(
+                              'Beginner',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontFamily: 'Inter',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                  actions: <Widget>[
-                    // DropdownButton for selecting sort order
-                    IconButton(
-                      icon: Icon(
-                        Icons.shopping_cart,
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/wishlistPage');
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.add,
-                      ),
-                      onPressed: () {
-                        // Navigator.pushNamed(context, '/addPage');
-                        Navigator.pushNamed(context, '/map');
-                      },
-                    ),
-                  ],
                 ),
-                body: Column(
-                  children: [
-                    DropdownButton<String>(
-                      value: _selectedOrder,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedOrder = newValue!;
-                        });
-                      },
-                      items: <String>['asc', 'desc']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text('Price $value'),
-                        );
-                      }).toList(),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(25.0, 25.0, 16.0, 25.0),
+                  child: Text(
+                    'Running Record',
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.white,
+                      fontFamily: 'kanit',
                     ),
-                   Expanded(
-                      child: FutureBuilder<List<Widget>>(
-                        future: _buildGridCards(context),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            // Handle the error
-                            return Text('Error: ${snapshot.error}');
-                          }
+                  ),
+                ),
+                Expanded(
+                  child: FutureBuilder<List<Widget>>(
+                    future: _buildGridCards(context, recordProvider),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
 
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            // Return a loading indicator while waiting for the data
-                            return CircularProgressIndicator();
-                          }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      }
 
-                          if (!snapshot.hasData || snapshot.data == null) {
-                            // Return an empty state if there's no data
-                            return Text('No data available');
-                          }
-                          // Return the GridView with the data
-                          return Consumer<FirebaseAuthProvider>(
-                            builder: (context,provider,child) {
-                              return Consumer<ProductProvider>(
-                                builder: (context,productProvider,child) {
-                                  return Consumer<WishlistProvider>(
-                                    builder: (context,wishlistProvider,_) {
-                                      return GridView.count(
-                                        crossAxisCount: 2,
-                                        padding: const EdgeInsets.all(16.0),
-                                        childAspectRatio: 8.0 / 9.0,
-                                        children: snapshot.data!,
-                                      );
-                                    }
-                                  );
-                                }
-                              );
-                            }
-                          );
-                        },
-                      ),
+                      if (!snapshot.hasData || snapshot.data == null) {
+                        return Text('No data available');
+                      }
+
+                      return GridView.count(
+                        crossAxisCount: 2,
+                        padding: const EdgeInsets.all(16.0),
+                        childAspectRatio: 13.0 / 10.0, // Adjust this ratio to change the size of the cards
+                        children: snapshot.data!,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<List<Widget>> _buildGridCards(
+      BuildContext context, RecordProvider recordProvider) async {
+    List<Widget> cards = [];
+
+    try {
+      List<Record> records = await recordProvider
+          .getRecords(); // Replace this with your actual method to fetch records
+
+      for (Record record in records) {
+        Widget card = Card(
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, top: 8.0), // Adjust the left padding as needed
+                          child: Text(
+                            _formatDate(record.date.toDate()),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0), // Adjust the left padding as needed
+                          child: Text(
+                            _formatday(record.date.toDate()),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+                          child: Text(
+                            _formatDistance(record.distance),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+                          child: Text(
+                            '${record.pace.toStringAsFixed(2)} km/hr',
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+                          child: Text(
+                            _formatTime(record.time),
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
+                ],
+              ),
+              Positioned(
+                right: 25.0,
+                top: 50.0,
+                child: Image.asset(
+                  'assets/start_run.png',
+                  width: 60, // Adjust the width as needed
+                  height: 60, // Adjust the height as needed
                 ),
               ),
-            );
-          }
+            ],
+          ),
         );
+        cards.add(card);
       }
-    );
+    } catch (error) {
+      print('Error fetching records: $error');
+    }
+
+    return cards;
+  }
+
+  String _formatday(DateTime date) {
+    final day = DateFormat.d().format(date);
+    final suffix = _getDaySuffix(int.parse(day));
+
+    return DateFormat("h:mm a").format(date);
+  }
+
+  String _formatDate(DateTime date) {
+    final day = DateFormat.d().format(date);
+    final suffix = _getDaySuffix(int.parse(day));
+
+    return DateFormat("MMMM $day").format(date) + suffix + DateFormat(", y").format(date);
+  }
+
+
+  String _getDaySuffix(int day) {
+    if (day >= 11 && day <= 13) {
+      return 'th';
+    }
+    final int lastDigit = day % 10;
+    switch (lastDigit) {
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
+    }
+  }
+
+  String _formatDistance(int distanceInMeters) {
+    // Convert meters to kilometers
+    double distanceInKm = distanceInMeters / 1000;
+
+    // Format distance to 2 decimal digits
+    String formattedDistance = distanceInKm.toStringAsFixed(2);
+
+    return '$formattedDistance km';
+  }
+
+  String _formatTime(int timeInSeconds) {
+    if (timeInSeconds >= 3600) {
+      // Convert seconds to hours
+      double timeInHours = timeInSeconds / 3600;
+      return '${timeInHours.toStringAsFixed(2)} hours';
+    } else if (timeInSeconds >= 60) {
+      // Convert seconds to minutes
+      double timeInMinutes = timeInSeconds / 60;
+      return '${timeInMinutes.toStringAsFixed(2)} minutes';
+    } else {
+      return '${timeInSeconds.toStringAsFixed(2)} seconds';
+    }
   }
 }
