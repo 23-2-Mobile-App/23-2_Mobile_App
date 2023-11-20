@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -20,11 +21,14 @@ class _MapScreenState extends State<MapScreen> {
   List<LatLng> _polylineCoordinates = [];
   late StreamSubscription<Position> _locationSubscription;
   String? userEmail;
+  int _currentIndex =0;
+  Timer? _locationTimer; // Add this line
+
 
   @override
   void initState() {
     super.initState();
-
+    _currentIndex =1;
     _locationSubscription = Geolocator.getPositionStream(
       desiredAccuracy: LocationAccuracy.best,
       distanceFilter: 10,
@@ -40,13 +44,17 @@ class _MapScreenState extends State<MapScreen> {
       _getCurrentLocation();
     });
 
+    _locationTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
+      _getCurrentLocation();
+    });
+
     _getUserEmail();
   }
 
   void _onLocationChanged(Position position) {
     final LatLng newPosition = LatLng(position.latitude, position.longitude);
 
-    // Update the marker position
+    if(mounted)
     setState(() {
       _markers.clear();
       _markers.add(
@@ -83,7 +91,7 @@ class _MapScreenState extends State<MapScreen> {
     // Update the map camera
     _controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
-    // Update the marker position
+    if(mounted)
     setState(() {
       _markers.clear();
       _markers.add(
@@ -99,7 +107,7 @@ class _MapScreenState extends State<MapScreen> {
     _polylineCoordinates.add(LatLng(position.latitude, position.longitude));
 
     // Update the polylines on the map
-
+  if(mounted)
     setState(() {
       _myLocationEnabled = true;
     });
@@ -118,12 +126,13 @@ class _MapScreenState extends State<MapScreen> {
   void dispose() {
     _controller.dispose();
     _locationSubscription.cancel();
+    _locationTimer?.cancel(); // Cancel the timer
+
     super.dispose();
   }
-  @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      child: Stack(
+    return Scaffold(
+      body: Stack(
         children: [
           GoogleMap(
             onMapCreated: (controller) {
@@ -201,21 +210,38 @@ class _MapScreenState extends State<MapScreen> {
               ],
             ),
           ),
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: FloatingActionButton(
-              onPressed: _getCurrentLocation,
-              foregroundColor: Colors.black,
-              backgroundColor: Colors.white,
-              elevation: 8,
-              child: Icon(Icons.my_location),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
         ],
+      ),
+      bottomNavigationBar: ConvexAppBar(
+        backgroundColor: Colors.white,
+        style: TabStyle.react,
+        items: [
+          TabItem(icon: Icons.menu, title: 'DashBoard'),
+          TabItem(icon: Icons.emoji_events, title: 'Run'),
+          TabItem(icon: Icons.chat, title: 'Goal'),
+          TabItem(icon: Icons.person, title: 'Profile'),
+        ],
+        initialActiveIndex: _currentIndex,
+        activeColor: Colors.deepPurpleAccent,
+        color: Colors.grey,
+        onTap: (int index) {
+            _currentIndex = index;
+
+          // Handle tab selection
+          switch (index) {
+            case 0:
+              Navigator.pushReplacementNamed(context, '/');
+              break;
+            case 1:
+
+              break;
+            case 2:
+              break;
+            case 3:
+              Navigator.pushReplacementNamed(context, '/profilePage');
+              break;
+          }
+        },
       ),
     );
   }
