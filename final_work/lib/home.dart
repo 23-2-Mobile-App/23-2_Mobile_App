@@ -62,19 +62,6 @@ class _HomePageState extends State<HomePage> {
                                 fontFamily: 'Inter',
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/mapPage',
-                                );
-                              },
-                              child: Image.asset(
-                                'assets/start_run.png',
-                                height: 80,
-                                width: 80,
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -132,9 +119,9 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: Colors.white,
               style: TabStyle.react,
               items: [
-                TabItem(icon: Icons.menu, title: 'Menu'),
-                TabItem(icon: Icons.emoji_events, title: 'Achievement'),
-                TabItem(icon: Icons.chat, title: 'Chat'),
+                TabItem(icon: Icons.menu, title: 'DashBoard'),
+                TabItem(icon: Icons.emoji_events, title: 'Run'),
+                TabItem(icon: Icons.chat, title: 'Goal'),
                 TabItem(icon: Icons.person, title: 'Profile'),
               ],
               initialActiveIndex: _currentIndex,
@@ -142,22 +129,19 @@ class _HomePageState extends State<HomePage> {
               color: Colors.grey,
               onTap: (int index) {
                 // Handle tab selection
-                setState(() {
                   _currentIndex = index;
-                });
                 // Add your logic based on the selected tab index
                 switch (index) {
                   case 0:
-                  // Handle menu tab press
+
                     break;
                   case 1:
-                  // Handle achievement tab press
+                    Navigator.pushReplacementNamed(context, '/mapPage');
                     break;
                   case 2:
-                  // Handle chat tab press
                     break;
                   case 3:
-                  // Handle profile tab press
+                    Navigator.pushReplacementNamed(context, '/profilePage');
                     break;
                 }
               },

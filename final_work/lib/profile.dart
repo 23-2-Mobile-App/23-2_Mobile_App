@@ -1,3 +1,4 @@
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'model/model_auth.dart';
@@ -10,6 +11,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  int _currentIndex =3;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,6 +82,36 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: ConvexAppBar(
+        backgroundColor: Colors.white,
+        style: TabStyle.react,
+        items: [
+          TabItem(icon: Icons.menu, title: 'DashBoard'),
+          TabItem(icon: Icons.emoji_events, title: 'Run'),
+          TabItem(icon: Icons.chat, title: 'Goal'),
+          TabItem(icon: Icons.person, title: 'Profile'),
+        ],
+        initialActiveIndex: _currentIndex,
+        activeColor: Colors.deepPurpleAccent, // Set the color of active (selected) icon and text to black
+        color: Colors.grey,
+        onTap: (int index) {
+          // Handle tab selection
+          _currentIndex = index;
+          // Add your logic based on the selected tab index
+          switch (index) {
+            case 0:
+              Navigator.pushReplacementNamed(context, '/');
+              break;
+            case 1:
+              Navigator.pushReplacementNamed(context, '/mapPage');
+              break;
+            case 2:
+              break;
+            case 3:
+              break;
+          }
+        },
       ),
     );
   }
