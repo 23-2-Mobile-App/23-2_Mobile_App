@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'model/model_auth.dart';
+import 'package:rive/rive.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -11,22 +13,62 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  Artboard? riveArtboard;
+  SMIBool? isDance;
+  SMITrigger? isLookUp;
   final FirebaseAuthProvider _authProvider = FirebaseAuthProvider();
+
+  @override
+  void initState() {
+    super.initState();
+    rootBundle.load('assets/dash_flutter_muscot.riv').then(
+          (data) async {
+        try {
+          final file = RiveFile.import(data);
+          final artboard = file.mainArtboard;
+          var controller =
+          StateMachineController.fromArtboard(artboard, 'birb');
+          if (controller != null) {
+            artboard.addController(controller);
+            isDance = controller.findSMI('dance');
+            isLookUp = controller.findSMI('look up');
+          }
+          setState(() => riveArtboard = artboard);
+        } catch (e) {
+          print(e);
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         color: const Color(0xFF01C1FD),
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          children: <Widget>[
-            const SizedBox(height: 80.0),
+        child:
             Column(
               children: <Widget>[
-                LottieBuilder.asset(
-                  'assets/bear.json',
-                  animate: true, // Auto-play the animation
+
+                const SizedBox(height: 100.0),
+                Container(
+                  width: 400,
+                  height: 400,
+                  child: Rive(
+                    artboard: riveArtboard!,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Dance'),
+                    Switch(
+                      value: isDance!.value,
+                      onChanged: (value) => toggleDance(value),
+                    ),
+                  ],
                 ),
                 Text(
                   "Kupyer Running Club",
@@ -35,8 +77,12 @@ class _LoginPageState extends State<LoginPage> {
                     fontSize: 30.0, // 원하는 폰트 크기로 조정
                   ),
                 ),
-                const SizedBox(height: 16.0),
-                // SizedBox(height: 200,),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  child: const Text('Look up'),
+                  onPressed: () => isLookUp?.value = true,
+                ),
+                const SizedBox(height: 12),
                 Container(
                   width: 200,
                   height: 50,
@@ -52,9 +98,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ],
             ),
-          ],
         ),
-      ),
+
     );
+  }
+  void toggleDance(bool newValue) {
+    setState(() => isDance!.value = newValue);
   }
 }

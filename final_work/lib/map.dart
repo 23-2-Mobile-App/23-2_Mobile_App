@@ -153,15 +153,20 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     child: Center(
                       child:
-                      DefaultTextStyle(
-                        style: TextStyle(fontSize: 80, fontWeight: FontWeight.bold, color: Colors.black, fontStyle: FontStyle.italic),
-                        child: Text(userEmail ?? 'Anonymous',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12, // 글씨체 크기 12
+                      Column(
+                        children: [
+                          DefaultTextStyle(
+                            style: TextStyle(fontSize: 80, fontWeight: FontWeight.bold, color: Colors.black, fontStyle: FontStyle.italic),
+                            child: Text(userEmail ?? 'Anonymous',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12, // 글씨체 크기 12
+                              ),
+                            ),
                           ),
-                        ),
+
+                        ],
                       ),
                     ),
                   ),

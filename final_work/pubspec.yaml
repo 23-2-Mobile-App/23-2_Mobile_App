@@ -34,6 +34,8 @@ dev_dependencies:
   intl: ^0.17.0
   url_launcher: ^6.1.14
   build_runner: ^2.4.6
+  rive: ^0.12.3
+
 
 flutter:
   # TODO: Insert Fonts (103)
@@ -46,6 +48,8 @@ flutter:
     - assets/runner.png
     - assets/sweat.png
     - assets/cheetah.png
+    - assets/water.riv
+    - assets/dash_flutter_muscot.riv
 
 
 

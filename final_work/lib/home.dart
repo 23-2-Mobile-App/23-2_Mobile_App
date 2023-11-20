@@ -62,6 +62,19 @@ class _HomePageState extends State<HomePage> {
                                 fontFamily: 'Inter',
                               ),
                             ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/mapPage',
+                                );
+                              },
+                              child: Image.asset(
+                                'assets/start_run.png',
+                                height: 80,
+                                width: 80,
+                              ),
+                            ),
                           ],
                         ),
                       ),
