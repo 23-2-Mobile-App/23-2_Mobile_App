@@ -1,61 +1,105 @@
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
-import 'package:lottie/lottie.dart';
-import 'model/model_auth.dart';
 import 'package:rive/rive.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  ValueNotifier<double> valueNotifier = ValueNotifier<double>(0.0);
   StateMachineController? controller;
-  SMIInput<double>? valueInput;
-
+  SMIInput<double>? inputValue;
+  double currentLevel = 0;
+  int _currentIndex =2;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            // const SizedBox(height: 32),
-            // const Expanded(child: SizedBox()),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
+      body: Stack(
+        children: [
+          RiveAnimation.asset(
+            "assets/water-bar-demo.riv",
+            fit: BoxFit.cover,
+            onInit: (artboard) {
+              controller = StateMachineController.fromArtboard(
+                artboard,
+                "State Machine",
+              );
+              if(controller != null) {
+                artboard.addController(controller!);
+                inputValue = controller?.findInput("Level");
+                inputValue?.change(currentLevel);
+              }
+            },
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                  SizedBox(
-                    width: 450,
-                    height: 200,
-                    child: RiveAnimation.asset(
-                      "assets/water.riv",
-                      onInit: (artboard) {},
-                    ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      currentLevel--;
+                    });
+                    inputValue?.change(currentLevel);
+                  },
+                  child: Container(
+                    height: 50,
+                    width: 50,
+                    color: Colors.red,
                   ),
-                // ValueListenableBuilder<double>(
-                //   valueListenable: valueNotifier,
-                //   builder: (context, value, _) {
-                //     return RotatedBox(
-                //       quarterTurns: 3,
-                //       child: Slider(
-                //         value: value,
-                //         onChanged: (val) {
-                //           valueNotifier.value = val;
-                //         },
-                //       ),
-                //     );
-                //   },
-                // ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      currentLevel++;
+                    });
+                    inputValue?.change(currentLevel);
+                  },
+                  child: Container(
+                    height: 50,
+                    width: 50,
+                    color: Colors.green,
+                  ),
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: ConvexAppBar(
+        backgroundColor: Colors.white,
+        style: TabStyle.react,
+        items: [
+          TabItem(icon: Icons.menu, title: 'DashBoard'),
+          TabItem(icon: Icons.emoji_events, title: 'Run'),
+          TabItem(icon: Icons.chat, title: 'Goal'),
+          TabItem(icon: Icons.person, title: 'Profile'),
+        ],
+        initialActiveIndex: _currentIndex,
+        activeColor: Colors.deepPurpleAccent, // Set the color of active (selected) icon and text to black
+        color: Colors.grey,
+        onTap: (int index) {
+          // Handle tab selection
+          _currentIndex = index;
+          // Add your logic based on the selected tab index
+          switch (index) {
+            case 0:
+
+              break;
+            case 1:
+              break;
+            case 2:
+              Navigator.pushReplacementNamed(context, '/tmpPage');
+              break;
+            case 3:
+              Navigator.pushReplacementNamed(context, '/profilePage');
+              break;
+          }
+        },
       ),
     );
   }

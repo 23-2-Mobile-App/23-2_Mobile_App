@@ -15,34 +15,23 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              // Log out the user and navigate to the login page
-              Provider.of<FirebaseAuthProvider>(context, listen: false).signOut();
-              Navigator.pushReplacementNamed(context, '/login');
-            },
-          ),
-        ],
-      ),
+      backgroundColor: const Color(0xFF01C1FD),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Consumer<FirebaseAuthProvider>(
               builder: (context, authProvider, _) {
                 if (authProvider.currentUser == null) {
                   return CircularProgressIndicator();
                 }
-
                 if (authProvider.currentUser?.isAnonymous ?? false) {
                   // Display information for anonymous user
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.network(
                         'http://handong.edu/site/handong/res/img/logo.png',
@@ -57,6 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   // Display information for authenticated user
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CircleAvatar(
                         radius: 50,
@@ -66,7 +56,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       Text('UID: ${authProvider.currentUser?.uid ?? ""}'),
                       Text('Email: ${authProvider.currentUser?.email ?? ""}'),
-
                     ],
                   );
                 }
