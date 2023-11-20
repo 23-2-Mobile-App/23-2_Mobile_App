@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Dance'),
+                Text('Dance',style: TextStyle(fontFamily: 'Noto_Serif_KR')),
                 Switch(
                   value: isDance?.value ?? false,
                   onChanged: (value) => toggleDance(value),
@@ -72,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 30.0,
+                fontFamily: 'Kanit',
               ),
             ),
             const SizedBox(height: 12),
@@ -91,7 +92,8 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.of(context).pop();
                   }
                 },
-                child: Text('GOOGLE'),
+                child: Text('GOOGLE',style: TextStyle(fontFamily: 'Noto_Serif_KR',
+                ),),
               ),
             ),
           ],
