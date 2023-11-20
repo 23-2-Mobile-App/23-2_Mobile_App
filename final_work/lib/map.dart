@@ -20,10 +20,13 @@ class _MapScreenState extends State<MapScreen> {
   Set<Polyline> _polylines = {};
   List<LatLng> _polylineCoordinates = [];
   late StreamSubscription<Position> _locationSubscription;
-  String? userEmail;
+  String? email;
+  String? user_name;
+  String? user_RC;
+  String? user_image;
+  int? total_run;
   int _currentIndex =0;
-  Timer? _locationTimer; // Add this line
-
+  Timer? _locationTimer; 
 
   @override
   void initState() {
@@ -47,8 +50,8 @@ class _MapScreenState extends State<MapScreen> {
     _locationTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
       _getCurrentLocation();
     });
-
-    _getUserEmail();
+    
+    _getUserInfo();
   }
 
   void _onLocationChanged(Position position) {
@@ -61,7 +64,7 @@ class _MapScreenState extends State<MapScreen> {
         Marker(
           markerId: MarkerId('userLocation'),
           position: newPosition,
-          infoWindow: InfoWindow(title: 'Your Location', snippet: userEmail ?? ''),
+          infoWindow: InfoWindow(title: 'Your Location', snippet: user_name ?? ''),
         ),
       );
     });
@@ -98,7 +101,7 @@ class _MapScreenState extends State<MapScreen> {
         Marker(
           markerId: MarkerId('userLocation'),
           position: LatLng(position.latitude, position.longitude),
-          infoWindow: InfoWindow(title: 'Your Location', snippet: userEmail ?? ''),
+          infoWindow: InfoWindow(title: 'Your Location', snippet: user_name ?? ''),
         ),
       );
     });
@@ -113,12 +116,16 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  void _getUserEmail() {
+  void _getUserInfo() {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
 
     if (user != null) {
-      userEmail = user.email;
+      email = user.email;
+      user_name= user.displayName;
+      user_image=user.photoURL;
+      total_run=1;
+      user_RC="Kuyper";
     }
   }
 
@@ -157,29 +164,43 @@ class _MapScreenState extends State<MapScreen> {
                   height: 200.0,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.7),
+                      color: Color(0xFF2f294b).withOpacity(0.8),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Center(
-                      child:
-                      Column(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20.0, top: 20.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(user_image ?? ''),
+                          ),
+                          SizedBox(width: 22), // Add some space between the image and text
                           DefaultTextStyle(
-                            style: TextStyle(fontSize: 80, fontWeight: FontWeight.bold, color: Colors.black, fontStyle: FontStyle.italic),
-                            child: Text(userEmail ?? 'Anonymous',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12, // 글씨체 크기 12
-                              ),
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'inter',
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('$user_name님'),
+                                SizedBox(height: 8),
+                                Text('이번주 런닝 횟수는 $total_run회입니다'),
+                                SizedBox(height: 8),
+                                Text('$user_RC RC'),
+                              ],
                             ),
                           ),
-
                         ],
                       ),
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 300),
                 GestureDetector(
                   onTap: () {
