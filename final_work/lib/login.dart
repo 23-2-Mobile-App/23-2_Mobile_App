@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () async {
-                      bool success = await _authProvider.signInWithGoogle();
+                      bool success = await _authProvider.signInWithGoogle(context);
                       if (success) {
                         Navigator.of(context).pop();
                       }

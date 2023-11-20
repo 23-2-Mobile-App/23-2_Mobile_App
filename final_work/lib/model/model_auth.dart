@@ -12,7 +12,7 @@ class FirebaseAuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> signInWithGoogle() async {
+  Future<bool> signInWithGoogle(BuildContext context) async {
     try {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
@@ -22,23 +22,48 @@ class FirebaseAuthProvider with ChangeNotifier {
         return false;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser
-          .authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      UserCredential userCredential = await _auth.signInWithCredential(
-          credential);
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
       User? user = userCredential.user;
 
-      // Check if the user document exists, if not, create it
-      await _createOrUpdateUserDocument(user);
+      // Check if the user's email domain is allowed
+      if (user != null && user.email != null && user.email!.endsWith('@handong.ac.kr')) {
+        // Check if the user document exists, if not, create it
+        await _createOrUpdateUserDocument(user);
 
-      print("구글 로그인 성공! 사용자 ID: ${user?.uid}");
-      notifyListeners();
-      return true;
+        print("구글 로그인 성공! 사용자 ID: ${user.uid}");
+        notifyListeners();
+        return true;
+      } else {
+        // Sign out the user and show an AlertDialog
+        await _auth.signOut();
+        await googleSignIn.signOut();
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('로그인 오류'),
+              content: Text('한동대 학생만 로그인 가능합니다'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('확인'),
+                ),
+              ],
+            );
+          },
+        );
+
+        return false;
+      }
     } catch (e) {
       errorMessage = "구글 로그인에 실패했습니다: $e";
       return false;
