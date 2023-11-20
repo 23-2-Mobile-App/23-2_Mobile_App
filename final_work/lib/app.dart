@@ -20,6 +20,7 @@ import 'package:shrine/runPage.dart';
 import 'package:shrine/profile.dart';
 
 import 'package:shrine/savePage.dart';
+import 'package:shrine/tmp.dart';
 import 'package:shrine/wish_list.dart';
 import 'countdown.dart';
 import 'login.dart';
@@ -37,13 +38,14 @@ class ShrineApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/': (BuildContext context) => const HomePage(),
-        '/map': (BuildContext context) => MapScreen(),
+        '/mapPage': (BuildContext context) => MapScreen(),
         '/login': (BuildContext context) => const LoginPage(),
         '/editPage' : (BuildContext context) => const EditPage(),
         '/profilePage' : (BuildContext context) => const ProfilePage(),
         '/countdownPage' : (BuildContext context) => const CountdownPage(),
         '/runPage' : (BuildContext context) => const RunPage(),
         '/savePage' : (BuildContext context) => const SavePage(),
+        // '/tmpPage' : (BuildContext context) => const TmpPage(),
       },
       // TODO: Customize the theme (103)
       theme: ThemeData.light(useMaterial3: true),
