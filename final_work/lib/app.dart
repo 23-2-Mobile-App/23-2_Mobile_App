@@ -45,7 +45,7 @@ class ShrineApp extends StatelessWidget {
         '/countdownPage' : (BuildContext context) => const CountdownPage(),
         '/runPage' : (BuildContext context) => const RunPage(),
         '/savePage' : (BuildContext context) => const SavePage(),
-        // '/tmpPage' : (BuildContext context) => const TmpPage(),
+        '/tmpPage' : (BuildContext context) => const HomeScreen(),
       },
       // TODO: Customize the theme (103)
       theme: ThemeData.light(useMaterial3: true),
