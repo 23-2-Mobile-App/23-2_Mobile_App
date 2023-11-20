@@ -50,15 +50,11 @@ class _LoginPageState extends State<LoginPage> {
         child:
             Column(
               children: <Widget>[
-                Text(
-                  "Kupyer Running Club",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30.0, // 원하는 폰트 크기로 조정
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                Expanded(
+
+                const SizedBox(height: 100.0),
+                Container(
+                  width: 400,
+                  height: 400,
                   child: Rive(
                     artboard: riveArtboard!,
                   ),
@@ -73,6 +69,13 @@ class _LoginPageState extends State<LoginPage> {
                       onChanged: (value) => toggleDance(value),
                     ),
                   ],
+                ),
+                Text(
+                  "Kupyer Running Club",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30.0, // 원하는 폰트 크기로 조정
+                  ),
                 ),
                 const SizedBox(height: 12),
                 ElevatedButton(
