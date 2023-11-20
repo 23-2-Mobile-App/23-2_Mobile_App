@@ -8,6 +8,7 @@ import 'model/model_auth.dart';
 import 'model/model_record.dart';
 import 'model/record.dart';
 import 'model/users.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FirebaseAuthProvider _firebaseAuthProvider = FirebaseAuthProvider();
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +101,16 @@ class _HomePageState extends State<HomePage> {
                       }
 
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
+                        return Center(
+                          child: Text(
+                            'Loading...',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
                       }
 
                       if (!snapshot.hasData || snapshot.data == null) {
@@ -116,6 +127,40 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ],
+            ),
+            bottomNavigationBar: ConvexAppBar(
+              backgroundColor: Colors.white,
+              style: TabStyle.react,
+              items: [
+                TabItem(icon: Icons.menu, title: 'Menu'),
+                TabItem(icon: Icons.emoji_events, title: 'Achievement'),
+                TabItem(icon: Icons.chat, title: 'Chat'),
+                TabItem(icon: Icons.person, title: 'Profile'),
+              ],
+              initialActiveIndex: _currentIndex,
+              activeColor: Colors.deepPurpleAccent, // Set the color of active (selected) icon and text to black
+              color: Colors.grey,
+              onTap: (int index) {
+                // Handle tab selection
+                setState(() {
+                  _currentIndex = index;
+                });
+                // Add your logic based on the selected tab index
+                switch (index) {
+                  case 0:
+                  // Handle menu tab press
+                    break;
+                  case 1:
+                  // Handle achievement tab press
+                    break;
+                  case 2:
+                  // Handle chat tab press
+                    break;
+                  case 3:
+                  // Handle profile tab press
+                    break;
+                }
+              },
             ),
           ),
         );
