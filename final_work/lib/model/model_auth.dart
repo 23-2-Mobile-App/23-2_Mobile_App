@@ -85,17 +85,19 @@ class FirebaseAuthProvider with ChangeNotifier {
         'sum_distance': "100",
         'sum_time': "100",
         'user_RC': "100",
-        'user_image': "100",
+        'user_image': user?.photoURL,
+        'total_run' : "0",
       });
     } else {
       // If the user document already exists, update it with the latest information
       await userDoc.update({
         'email': user?.email,
-        'name': user?.displayName,
+        'user_name': user?.displayName,
         'sum_distance': "100",
         'sum_time': "100",
         'user_RC': "100",
-        'user_image': "100",
+        'user_image': user?.photoURL,
+        'total_run' : '0',
       });
     }
     notifyListeners();
