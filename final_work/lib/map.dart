@@ -24,6 +24,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
+
     _locationSubscription = Geolocator.getPositionStream(
       desiredAccuracy: LocationAccuracy.best,
       distanceFilter: 10,
@@ -31,7 +32,13 @@ class _MapScreenState extends State<MapScreen> {
       _onLocationChanged(position);
     });
 
-    _getCurrentLocation(); // 초기에 현재 위치 가져오기
+    // Call _getCurrentLocation() when the widget is first created
+    _getCurrentLocation();
+
+    // Use a timer to call _getCurrentLocation() every 10 seconds
+    Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      _getCurrentLocation();
+    });
 
     _getUserEmail();
   }
@@ -55,20 +62,9 @@ class _MapScreenState extends State<MapScreen> {
     _polylineCoordinates.add(newPosition);
 
     // Update the polylines on the map
-    _updatePolylines();
+
   }
 
-  void _updatePolylines() {
-    _polylines.clear();
-    _polylines.add(
-      Polyline(
-        polylineId: const PolylineId('userPath'),
-        color: Colors.blue,
-        points: _polylineCoordinates,
-        width: 5,
-      ),
-    );
-  }
 
   Future<void> _getCurrentLocation() async {
     Position position;
@@ -103,7 +99,6 @@ class _MapScreenState extends State<MapScreen> {
     _polylineCoordinates.add(LatLng(position.latitude, position.longitude));
 
     // Update the polylines on the map
-    _updatePolylines();
 
     setState(() {
       _myLocationEnabled = true;
@@ -125,21 +120,23 @@ class _MapScreenState extends State<MapScreen> {
     _locationSubscription.cancel();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: Stack(
         children: [
           GoogleMap(
-            onMapCreated: (controller) => _controller = controller,
+            onMapCreated: (controller) {
+              _controller = controller;
+              _getCurrentLocation(); // Call _getCurrentLocation() when the map is created
+            },
             initialCameraPosition: const CameraPosition(
-              target: LatLng(37.532600, 127.024612), // 초기 위치를 서울 시청으로 설정
+              target: LatLng(37.532600, 127.024612),
               zoom: 18,
             ),
             myLocationEnabled: _myLocationEnabled,
-            myLocationButtonEnabled: false,
-            markers: _markers,
+            myLocationButtonEnabled: true, // Enable the my location button
+            // markers: _markers,
             polylines: _polylines,
           ),
           Center(
@@ -156,12 +153,14 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     child: Center(
                       child:
-                      Text(
-                        userEmail ?? 'Anonymous', // 여기에 사용자 이메일 또는 'Anonymous' 표시
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12, // 글씨체 크기 12
+                      DefaultTextStyle(
+                        style: TextStyle(fontSize: 80, fontWeight: FontWeight.bold, color: Colors.black, fontStyle: FontStyle.italic),
+                        child: Text(userEmail ?? 'Anonymous',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12, // 글씨체 크기 12
+                          ),
                         ),
                       ),
                     ),
@@ -230,3 +229,4 @@ class MarkerDetailScreen extends StatelessWidget {
     );
   }
 }
+
