@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,7 +18,6 @@ class _RunPageState extends State<RunPage> {
   late GoogleMapController _controller;
   bool _isArrowButtonPressed = true;
   double distance = 0.0; // 이동 거리 (미터)
-  double speed = 0.0;    // 현재 속도 (m/s)
   double pace = 0.0; // 평균 속도 (m/s)
   Position? _previousLocation;
   late Timer _timer;
@@ -29,7 +29,13 @@ class _RunPageState extends State<RunPage> {
   List<LatLng> _polylineCoordinates = [];
   late StreamSubscription<Position> _locationSubscription;
   String? userEmail;
-  late Record record;
+  late Record currentRecord = Record(
+    date: Timestamp.now(),
+    distance: 0.0,
+    pace: 0.0,
+    time: 0.0,
+    imgURL: '0',
+  );
 
   Completer<GoogleMapController> _controllerCompleter = Completer();
 
@@ -168,8 +174,7 @@ class _RunPageState extends State<RunPage> {
         if(_isArrowButtonPressed == true){
           setState(() {
             distance += currentDistance;
-            pace = distance / (position.timestamp!.difference(_previousLocation!.timestamp!).inSeconds);
-            speed = position.speed ?? 0.0;
+            pace = distance / time;
           });
         }
       }
@@ -269,10 +274,12 @@ class _RunPageState extends State<RunPage> {
                                 icon: const Icon(Icons.stop,size: 60,),
                                 onPressed: () {
                                   _timer.cancel();
-                                  // record.distance = distance;
-                                  // record.pace = avgSpeed;
+                                  currentRecord.distance = distance;
+                                  currentRecord.pace = pace;
+                                  currentRecord.time = time;
+                                  currentRecord.imgURL = "0";
                                   Navigator.pop(context);
-                                  Navigator.pushNamed(context,'/savePage');
+                                  Navigator.pushNamed(context,'/savePage', arguments: currentRecord);
                                 }
                             ),
                           ],
@@ -330,7 +337,7 @@ class _RunPageState extends State<RunPage> {
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Text( "${speed.toStringAsFixed(2)}",style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
+                                          Text( "${pace.toStringAsFixed(2)}",style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
                                           Text('Time',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
                                         ],
                                       ), // check km
@@ -352,7 +359,7 @@ class _RunPageState extends State<RunPage> {
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Text('${speed.toStringAsFixed(2)}',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
+                                          Text('${pace.toStringAsFixed(2)}',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
                                           Text('pace',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
                                         ],
                                       ), // check km
@@ -427,7 +434,7 @@ class _RunPageState extends State<RunPage> {
                               style: TextStyle(fontSize: 40, color: Colors.black, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
                               children: [
                                 TextSpan(
-                                  text: "${speed.toStringAsFixed(2)}",
+                                  text: "${pace.toStringAsFixed(2)}",
                                 ),
                                 TextSpan(
                                   text: " m/s",
@@ -495,64 +502,6 @@ class _RunPageState extends State<RunPage> {
 
     return '$formattedMinutes:$formattedSeconds';
   }
-
-  // void _getCurrentLocation() async {
-  //   try {
-  //     if (!_isArrowButtonPressed) {
-  //       // If the button is not pressed, return without updating
-  //       return;
-  //     }
-  //
-  //     Position position = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high,
-  //     );
-  //
-  //     if (!mounted) {
-  //       // Check if the widget is still mounted before updating the state
-  //       return;
-  //     }
-  //
-  //     if (_previousLocation != null) {
-  //       double currentDistance = Geolocator.distanceBetween(
-  //         _previousLocation!.latitude,
-  //         _previousLocation!.longitude,
-  //         position.latitude,
-  //         position.longitude,
-  //       );
-  //
-  //       setState(() {
-  //         distance += currentDistance;
-  //       });
-  //
-  //       if (position.speed != null) {
-  //         setState(() {
-  //           pace = distance / (position.timestamp!.difference(_previousLocation!.timestamp!).inSeconds);
-  //         });
-  //       }
-  //
-  //       setState(() {
-  //         speed = position.speed ?? 0.0;
-  //       });
-  //
-  //       if (_isArrowButtonPressed) {
-  //         setState(() {
-  //           time += 1.0;
-  //         });
-  //       }
-  //     }
-  //
-  //     setState(() {
-  //       _previousLocation = position;
-  //     });
-  //
-  //     // Schedule the next location update
-  //     Future.delayed(Duration(seconds: 1), _getCurrentLocation);
-  //   } catch (e) {
-  //     print("Error: $e");
-  //   }
-  // }
-  
-
 }
 
 class MarkerDetailScreen extends StatelessWidget {
