@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Record {
   late Timestamp date;
-  late int distance;
-  late int pace;
-  late int time;
+  late double distance;
+  late double pace;
+  late double time;
   late String imgURL;
 
   Record({
@@ -28,7 +28,5 @@ class Record {
       imgURL: '0',
     );
   }
-
-
 }
 
