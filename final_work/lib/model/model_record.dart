@@ -19,7 +19,7 @@ class RecordProvider with ChangeNotifier {
       await _firestore.collection('users').doc(currentUser?.uid)
           .collection('records').orderBy('date', descending: true).get();
       List<Record> records = querySnapshot.docs.map((doc) => Record.fromFirestore(doc)).toList();
-      print("ss");
+      print("fetching records");
       return records;
     } catch (e) {
       print('Error fetching records: $e');
@@ -28,35 +28,24 @@ class RecordProvider with ChangeNotifier {
 
   }
 
-  Future<void> saveRecord({
-    required String uid,
-    required String date,
+  Future<void> createRecord({
     required int distance,
     required int pace,
-    required Timestamp time,
-    required String imgURL,
+    required int time,
+    // required String imgURL,
   }) async {
     try {
 
       User? user = FirebaseAuth.instance.currentUser;
 
-      DocumentReference documentReference = await _firestore.collection('user').doc(currentUser?.uid)
+      DocumentReference documentReference = await _firestore.collection('user').doc(user?.uid)
           .collection('records').add({
+        'date': DateTime.now(),
         'distance': distance,
         'pace': pace,
         'time': time,
-        'imgURL': 0,
-        'date': FieldValue.serverTimestamp(),
+        'imgURL': "0",
       });
-
-
-      // Get the document ID and update the product
-      String documentId = documentReference.id;
-      await _firestore.collection('users').doc(currentUser?.uid)
-          .collection('records').doc(documentId).update({
-        'uid': documentId,
-      });
-
       notifyListeners();
     } catch (e) {
       print('Error saving product: $e');
