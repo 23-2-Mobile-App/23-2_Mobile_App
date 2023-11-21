@@ -1,10 +1,11 @@
 import 'dart:async';
-
+import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'model/record.dart';
 
 class RunPage extends StatefulWidget {
   const RunPage({Key? key}) : super(key: key);
@@ -28,6 +29,7 @@ class _RunPageState extends State<RunPage> {
   List<LatLng> _polylineCoordinates = [];
   late StreamSubscription<Position> _locationSubscription;
   String? userEmail;
+  late Record record;
 
   Completer<GoogleMapController> _controllerCompleter = Completer();
 
@@ -268,6 +270,8 @@ class _RunPageState extends State<RunPage> {
                                 icon: const Icon(Icons.stop,size: 60,),
                                 onPressed: () {
                                   _timer.cancel();
+                                  // record.distance = distance;
+                                  // record.pace = avgSpeed;
                                   Navigator.pop(context);
                                   Navigator.pushNamed(context,'/savePage');
                                 }

@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context, recordProvider, child) {
         return SafeArea(
           child: Scaffold(
-            backgroundColor: const Color(0xFF01C1FD),
+            backgroundColor: const Color(0xFF51C4F2),
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                 TabItem(icon: Icons.person, title: 'Profile'),
               ],
               initialActiveIndex: _currentIndex,
-              activeColor: Colors.deepPurpleAccent, // Set the color of active (selected) icon and text to black
+              activeColor: Color(0xFF51C4F2), // Set the color of active (selected) icon and text to black
               color: Colors.grey,
               onTap: (int index) {
                 // Handle tab selection
