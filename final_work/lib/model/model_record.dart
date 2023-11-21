@@ -29,22 +29,23 @@ class RecordProvider with ChangeNotifier {
   }
 
   Future<void> createRecord({
-    required int distance,
-    required int pace,
-    required int time,
-    // required String imgURL,
+    required Timestamp date,
+    required double distance,
+    required double pace,
+    required double time,
+    required String imgURL,
   }) async {
     try {
 
       User? user = FirebaseAuth.instance.currentUser;
 
-      DocumentReference documentReference = await _firestore.collection('user').doc(user?.uid)
+      DocumentReference documentReference = await _firestore.collection('users').doc(user?.uid)
           .collection('records').add({
-        'date': DateTime.now(),
+        'date': date,
         'distance': distance,
         'pace': pace,
         'time': time,
-        'imgURL': "0",
+        'imgURL': imgURL,
       });
       notifyListeners();
     } catch (e) {
