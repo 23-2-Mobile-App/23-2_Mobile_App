@@ -235,6 +235,7 @@ class _MapScreenState extends State<MapScreen> {
       ),
       bottomNavigationBar: ConvexAppBar(
         backgroundColor: Colors.white,
+
         style: TabStyle.react,
         items: [
           TabItem(icon: Icons.menu, title: 'DashBoard'),
@@ -243,7 +244,7 @@ class _MapScreenState extends State<MapScreen> {
           TabItem(icon: Icons.person, title: 'Profile'),
         ],
         initialActiveIndex: _currentIndex,
-        activeColor: Colors.deepPurpleAccent,
+        activeColor: Color(0xFF51C4F2), // Set the color of active (selected) icon and text to black
         color: Colors.grey,
         onTap: (int index) {
             _currentIndex = index;
@@ -257,6 +258,7 @@ class _MapScreenState extends State<MapScreen> {
 
               break;
             case 2:
+              Navigator.pushReplacementNamed(context, '/goalPage');
               break;
             case 3:
               Navigator.pushReplacementNamed(context, '/profilePage');

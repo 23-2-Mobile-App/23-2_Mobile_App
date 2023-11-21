@@ -105,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
           TabItem(icon: Icons.person, title: 'Profile'),
         ],
         initialActiveIndex: _currentIndex,
-        activeColor: Colors.deepPurpleAccent, // Set the color of active (selected) icon and text to black
+        activeColor: Color(0xFF51C4F2), // Set the color of active (selected) icon and text to black
         color: Colors.grey,
         onTap: (int index) {
           // Handle tab selection
@@ -119,6 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Navigator.pushReplacementNamed(context, '/mapPage');
               break;
             case 2:
+              Navigator.pushReplacementNamed(context, '/goalPage');
               break;
             case 3:
               break;

@@ -139,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                     Navigator.pushReplacementNamed(context, '/mapPage');
                     break;
                   case 2:
-                    Navigator.pushReplacementNamed(context, '/tmpPage');
+                    Navigator.pushReplacementNamed(context, '/goalPage');
                     break;
                   case 3:
                     Navigator.pushReplacementNamed(context, '/profilePage');
