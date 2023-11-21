@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'model/model_record.dart';
+import 'model/record.dart';
 
 class SavePage extends StatefulWidget {
   const SavePage({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class _SavePageState extends State<SavePage> {
   @override
   Widget build(BuildContext context) {
     RecordProvider recordProvider = Provider.of<RecordProvider>(context, listen: false);
+    Record record = ModalRoute.of(context)!.settings.arguments as Record;
     return Scaffold(
       backgroundColor: Color(0xFF01C1FD), // 배경 색상 설정
       body: Center(
@@ -33,7 +35,7 @@ class _SavePageState extends State<SavePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                recordProvider.createRecord(distance: 1, pace: 1, time: 1);
+                recordProvider.createRecord(distance: record.distance, pace: record.pace, time: record.time, date: record.date, imgURL: record.imgURL);
                 Navigator.pop(context);
               },
               child: Text("save"),
