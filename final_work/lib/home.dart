@@ -280,9 +280,9 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  String _formatDistance(int distanceInMeters) {
+  String _formatDistance(double distanceInMeters) {
     // Convert meters to kilometers
-    double distanceInKm = distanceInMeters / 1000;
+    double distanceInKm = distanceInMeters / 1000.0;
 
     // Format distance to 2 decimal digits
     String formattedDistance = distanceInKm.toStringAsFixed(2);
@@ -290,14 +290,14 @@ class _HomePageState extends State<HomePage> {
     return '$formattedDistance km';
   }
 
-  String _formatTime(int timeInSeconds) {
-    if (timeInSeconds >= 3600) {
+  String _formatTime(double timeInSeconds) {
+    if (timeInSeconds >= 3600.0) {
       // Convert seconds to hours
-      double timeInHours = timeInSeconds / 3600;
+      double timeInHours = timeInSeconds / 3600.0;
       return '${timeInHours.toStringAsFixed(2)} hours';
-    } else if (timeInSeconds >= 60) {
+    } else if (timeInSeconds >= 60.0) {
       // Convert seconds to minutes
-      double timeInMinutes = timeInSeconds / 60;
+      double timeInMinutes = timeInSeconds / 60.0;
       return '${timeInMinutes.toStringAsFixed(2)} minutes';
     } else {
       return '${timeInSeconds.toStringAsFixed(2)} seconds';
