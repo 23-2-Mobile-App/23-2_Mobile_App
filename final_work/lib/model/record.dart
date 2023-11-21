@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Record {
-  late String uid;
   late Timestamp date;
   late int distance;
   late int pace;
@@ -9,7 +8,6 @@ class Record {
   late String imgURL;
 
   Record({
-    required this.uid,
     required this.date,
     required this.distance,
     required this.pace,
@@ -23,12 +21,11 @@ class Record {
     Timestamp dateTimestamp = data['date'] as Timestamp;
     DateTime dateTime = dateTimestamp.toDate();
     return Record(
-      uid: doc.id,
       date: dateTimestamp,
       distance: data['distance'] ?? 0,
       pace: data['pace'] ?? 0,
       time: data['time'] ?? 0,
-      imgURL: '',
+      imgURL: '0',
     );
   }
 

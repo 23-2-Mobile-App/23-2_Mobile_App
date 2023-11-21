@@ -47,7 +47,7 @@ class _MapScreenState extends State<MapScreen> {
       _getCurrentLocation();
     });
 
-    _locationTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
+    _locationTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
       _getCurrentLocation();
     });
     
