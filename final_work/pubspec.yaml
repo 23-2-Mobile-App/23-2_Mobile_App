@@ -30,11 +30,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.0
+  flutter_lints: ^2.0.0
   intl: ^0.17.0
   url_launcher: ^6.1.14
   build_runner: ^2.4.6
   rive: ^0.12.3
+
 
 
 flutter:
@@ -48,8 +49,10 @@ flutter:
     - assets/runner.png
     - assets/sweat.png
     - assets/cheetah.png
-    - assets/water.riv
     - assets/dash_flutter_muscot.riv
+    - assets/water-bar-demo.riv
+
+
 
 
 
@@ -63,3 +66,4 @@ flutter:
     - family: Kanit
       fonts:
         - asset: assets/fonts/Kanit-Regular.ttf
+

@@ -224,16 +224,24 @@ class _RunPageState extends State<RunPage> {
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.9),
                       borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2), // 그림자의 색상 및 불투명도 설정
+                          spreadRadius: 5, // 그림자의 확산 정도
+                          blurRadius: 5, // 그림자의 흐림 정도
+                          offset: Offset(7, 8), // 그림자의 위치 조정 (가로, 세로)
+                        ),
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(width: 30,),
                         const Padding(
-                          padding: EdgeInsets.fromLTRB(30, 20,200,0),
+                          padding: EdgeInsets.fromLTRB(30, 20,190,0),
                           child: DefaultTextStyle(
-                            style: TextStyle(fontSize: 25, color: Colors.grey, ),
-                            child: Text('Running time'),
+                            style: TextStyle(fontSize: 27, color: Colors.grey,fontWeight: FontWeight.bold),
+                            child: Text('Running time',),
                           ),
                         ),
                         Row(
@@ -265,54 +273,88 @@ class _RunPageState extends State<RunPage> {
                           ],
                         ),
                         Container(
-                          width: 350,
+                          width: 360,
                           height: 100,
                           decoration: BoxDecoration(
-                            color: Colors.black12.withOpacity(0.7),
+                            color: Color(0xFF01C1FD).withOpacity(0.7),
                             borderRadius: BorderRadius.circular(10.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2), // 그림자의 색상 및 불투명도 설정
+                                spreadRadius: 4, // 그림자의 확산 정도
+                                blurRadius: 5, // 그림자의 흐림 정도
+                                offset: Offset(0, 3), // 그림자의 위치 조정 (가로, 세로)
+                              ),
+                            ],
+
                           ),
                           child:  Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Image.asset('assets/runner.png',width: 30,height: 30),
-                               DefaultTextStyle(
-                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+
+                               Container(
+                                 width: 100,
+                                 child: Row(
+                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                   children: [
+                                     Image.asset('assets/runner.png',width: 30,height: 30),
+                                     DefaultTextStyle(
+                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text('${(distance / 1000).toStringAsFixed(2)}',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
+                                          Text('distance',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
+                                        ],
+                                      ), // check km
+                              ),
+                                   ],
+                                 ),
+                               ),
+                              const VerticalDivider(
+                                  color: Color.fromARGB(255, 211, 211, 211),
+                                  thickness: 2.0),
+                              Container(
+                                width: 100,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Text('${(distance / 1000).toStringAsFixed(2)}',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
-                                    Text('distance',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
+                                    Image.asset('assets/sweat.png',width: 30,height: 30),
+                                     DefaultTextStyle(
+                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text( "${speed.toStringAsFixed(2)}",style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
+                                          Text('Time',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
+                                        ],
+                                      ), // check km
+                                    ),
                                   ],
-                                ), // check km
+                                ),
                               ),
                               const VerticalDivider(
                                   color: Color.fromARGB(255, 211, 211, 211),
-                                  thickness: 1.0),
-                              Image.asset('assets/sweat.png',width: 30,height: 30),
-                               DefaultTextStyle(
-                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text( "${speed.toStringAsFixed(2)}",style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
-                                    Text('Time',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
-                                  ],
-                                ), // check km
+                                  thickness: 2.0),
+                               Container(
+                                 width: 100,
+                                 child: Row(
+                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                   children: [
+                                     Image.asset('assets/cheetah.png',width:30,height:30),
+                                     DefaultTextStyle(
+                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text('${speed.toStringAsFixed(2)}',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
+                                          Text('pace',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
+                                        ],
+                                      ), // check km
                               ),
-                              const VerticalDivider(
-                                  color: Color.fromARGB(255, 211, 211, 211),
-                                  thickness: 1.0),
-                              Image.asset('assets/cheetah.png',width:30,height:30),
-                               DefaultTextStyle(
-                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('${speed.toStringAsFixed(2)}',style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
-                                    Text('pace',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
-                                  ],
-                                ), // check km
-                              ),
+                                   ],
+                                 ),
+                               ),
                             ],
                           ),
                         ),

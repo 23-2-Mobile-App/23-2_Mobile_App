@@ -2,6 +2,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'model/model_auth.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -51,8 +52,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       );
                   }
-
-
                   if (authProvider.currentUser?.isAnonymous ?? false) {
                     // Display information for anonymous user
                     return Column(
