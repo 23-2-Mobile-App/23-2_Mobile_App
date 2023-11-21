@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,10 +16,10 @@ class _RunPageState extends State<RunPage> {
   bool _isArrowButtonPressed = true;
   double distance = 0.0; // 이동 거리 (미터)
   double speed = 0.0;    // 현재 속도 (m/s)
-  double avgSpeed = 0.0; // 평균 속도 (m/s)
+  double pace = 0.0; // 평균 속도 (m/s)
   Position? _previousLocation;
   late Timer _timer;
-  double elapsedTime = 0.0; // 경과 시간 (초)
+  double time = 0.0; // 경과 시간 (초)
 
   bool _myLocationEnabled = false;
   Set<Marker> _markers = {};
@@ -59,7 +58,7 @@ class _RunPageState extends State<RunPage> {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_isArrowButtonPressed) {
         setState(() {
-          elapsedTime += 1.0;
+          time += 1.0;
         });
       }
     });
@@ -111,7 +110,7 @@ class _RunPageState extends State<RunPage> {
       });
     }
   }
-  // Future<void> _getCurrentLocation() async {
+
   Future<void> _getCurrentLocation() async {
     try {
       // Wait for the controller to be initialized
@@ -166,7 +165,7 @@ class _RunPageState extends State<RunPage> {
         if(_isArrowButtonPressed == true){
           setState(() {
             distance += currentDistance;
-            avgSpeed = distance / (position.timestamp!.difference(_previousLocation!.timestamp!).inSeconds);
+            pace = distance / (position.timestamp!.difference(_previousLocation!.timestamp!).inSeconds);
             speed = position.speed ?? 0.0;
           });
         }
@@ -198,7 +197,6 @@ class _RunPageState extends State<RunPage> {
     return CupertinoPageScaffold(
       child: Stack(
         children: [
-
           GoogleMap(
             onMapCreated: (controller) {
               _controller = controller;
@@ -243,7 +241,7 @@ class _RunPageState extends State<RunPage> {
                             const SizedBox(width: 30,),
                             DefaultTextStyle(
                               style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black),
-                              child: Text('${_formatTime(elapsedTime)}'),
+                              child: Text('${_formatTime(time)}'),
                             ),
                             const SizedBox(width: 80,),
                             IconButton(
@@ -393,7 +391,7 @@ class _RunPageState extends State<RunPage> {
                           ),
                           DefaultTextStyle(
                             style: TextStyle(fontSize: 40, color: Colors.black,fontWeight: FontWeight.bold,fontStyle: FontStyle.italic),
-                            child: Text("${_formatTime(elapsedTime)}",
+                            child: Text("${_formatTime(time)}",
     )),
                         ],
                       ),
@@ -481,7 +479,7 @@ class _RunPageState extends State<RunPage> {
   //
   //       if (position.speed != null) {
   //         setState(() {
-  //           avgSpeed = distance / (position.timestamp!.difference(_previousLocation!.timestamp!).inSeconds);
+  //           pace = distance / (position.timestamp!.difference(_previousLocation!.timestamp!).inSeconds);
   //         });
   //       }
   //
@@ -491,7 +489,7 @@ class _RunPageState extends State<RunPage> {
   //
   //       if (_isArrowButtonPressed) {
   //         setState(() {
-  //           elapsedTime += 1.0;
+  //           time += 1.0;
   //         });
   //       }
   //     }
