@@ -133,7 +133,6 @@ class _HomePageState extends State<HomePage> {
                 // Add your logic based on the selected tab index
                 switch (index) {
                   case 0:
-
                     break;
                   case 1:
                     Navigator.pushReplacementNamed(context, '/mapPage');
