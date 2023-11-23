@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
         return SafeArea(
           child: Scaffold(
             backgroundColor: const Color(0xFF51C4F2),
+            // backgroundColor: const Color(0xFF080910),
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

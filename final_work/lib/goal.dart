@@ -1,6 +1,7 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
 class GoalPage extends StatefulWidget {
@@ -24,6 +25,8 @@ class _GoalPageState extends State<GoalPage> {
   SMIBool? isDance;
   SMITrigger? isLookUp;
 
+
+
   void _getUserInfo() {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
@@ -34,6 +37,23 @@ class _GoalPageState extends State<GoalPage> {
       user_image=user.photoURL;
       total_run=1;
       user_RC="Kuyper";
+
+    }
+  }
+  Future<void> loadRive() async {
+    final data = await rootBundle.load('assets/dash_flutter_muscot.riv');
+    try {
+      final file = RiveFile.import(data);
+      final artboard = file.mainArtboard;
+      var controller = StateMachineController.fromArtboard(artboard, 'birb');
+      if (controller != null) {
+        artboard.addController(controller);
+        isDance = controller.findSMI('dance');
+        isLookUp = controller.findSMI('look up');
+      }
+      setState(() => riveArtboard = artboard);
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -41,14 +61,25 @@ class _GoalPageState extends State<GoalPage> {
   void initState() {
     // TODO: implement initState
     _getUserInfo();
+    loadRive();
+    if(total_run!.toInt()>0){
+      toggleDance(true);
+    }
     currentLevel = total_run!.toDouble();
-    currentLevel = currentLevel*2;
+    currentLevel = currentLevel*20;
     super.initState();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Goal',style: TextStyle(color: Colors.white),),
+        backgroundColor: Color(0xFF080910),
+          elevation: 0.0, //appBar 그림자 농도 설정 (값 0으로 제거)
+      ),
       body: Stack(
         children: [
           SizedBox(
@@ -72,32 +103,38 @@ class _GoalPageState extends State<GoalPage> {
             top: MediaQuery.of(context).size.height/8,      //앱 화면 높이 double Ex> 692,
             left: MediaQuery.of(context).size.width/6-20,
             child: Container(
-              width: 350,
+              width: 500,
               height: 400,
               child: Padding(
-                padding: EdgeInsets.only(left: 20.0, top: 20.0),
+                padding: EdgeInsets.only(left: 1.0, top: 20.0),
                 child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // CircleAvatar(
-                        //   radius: 30,
-                        //   backgroundImage: NetworkImage(user_image ?? ''),
+                        // SizedBox(
+                        //   width: 90,
+                        //   height: 90,
+                        //   child: RiveAnimation.asset(
+                        //     "assets/dash_flutter_muscot.riv",
+                        //     fit: BoxFit.cover,
+                        //     onInit: (artboard) {
+                        //       controller = StateMachineController.fromArtboard(
+                        //         artboard,
+                        //         "State Machine",
+                        //       );
+                        //     },
+                        //   ),
                         // ),
-                        riveArtboard != null
-                            ? Container(
-                          width: 200,
-                          height: 200,
+                        riveArtboard != null ?
+                        Container(
+                          width: 120,
+                          height: 120,
                           child: Rive(artboard: riveArtboard!),
-                        )    : CircularProgressIndicator(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('Dance',style: TextStyle(fontFamily: 'Noto_Serif_KR')),
-                          ],
-                        ),
+                        )
+                            : CircularProgressIndicator(),
+
                         SizedBox(width: 22), // Add some space between the image and text
                         DefaultTextStyle(
                           style: TextStyle(
@@ -109,18 +146,34 @@ class _GoalPageState extends State<GoalPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.center,
+                              //   crossAxisAlignment: CrossAxisAlignment.center,
+                              //   children: [
+                              //     Text('Dance',style: TextStyle(fontFamily: 'Noto_Serif_KR')),
+                              //     Switch(
+                              //       value: isDance?.value ?? false,
+                              //       onChanged: (value) => toggleDance(value),
+                              //     ),
+                              //   ],
+                              // ),
+                              Text('$user_RC RC\n',style: TextStyle(
+                                fontSize: 20,
+                                color: Color(0xFF51C4F2),
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.italic,
+                                fontFamily: 'inter',
+                              ),),
                               Text('$user_name님'),
                               SizedBox(height: 8),
                               Text('이번주 런닝 횟수는 $total_run회입니다'),
                               SizedBox(height: 8),
-                              Text('$user_RC RC'),
                             ],
                           ),
                         ),
                       ],
                     ),
                     SizedBox(height: 40,),
-
                   ],
                 ),
               ),
@@ -129,10 +182,18 @@ class _GoalPageState extends State<GoalPage> {
           ),
           Positioned(
           bottom: MediaQuery.of(context).size.height/17,      //앱 화면 높이 double Ex> 692,
-          left: MediaQuery.of(context).size.width/3+10,
+          right: MediaQuery.of(context).size.width/3+10,
             child: DefaultTextStyle(
               style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
               child: Text('목표 런닝 횟수 7',),
+            ),
+          ),
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: ElevatedButton(
+              child: const Text('Look up'),
+              onPressed: () => isLookUp?.value = true,
             ),
           ),
         ],
