@@ -113,20 +113,6 @@ class _GoalPageState extends State<GoalPage> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // SizedBox(
-                        //   width: 90,
-                        //   height: 90,
-                        //   child: RiveAnimation.asset(
-                        //     "assets/dash_flutter_muscot.riv",
-                        //     fit: BoxFit.cover,
-                        //     onInit: (artboard) {
-                        //       controller = StateMachineController.fromArtboard(
-                        //         artboard,
-                        //         "State Machine",
-                        //       );
-                        //     },
-                        //   ),
-                        // ),
                         riveArtboard != null ?
                         Container(
                           width: 120,
