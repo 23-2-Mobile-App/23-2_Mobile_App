@@ -182,11 +182,8 @@ class _HomePageState extends State<HomePage> {
   Future<List<Widget>> _buildGridCards(
       BuildContext context, RecordProvider recordProvider) async {
     List<Widget> cards = [];
-
     try {
-      List<Record> records = await recordProvider
-          .getRecords(); // Replace this with your actual method to fetch records
-
+      List<Record> records = await recordProvider.getRecords();
       for (Record record in records) {
         Widget card = Card(
           clipBehavior: Clip.antiAlias,
@@ -272,14 +269,12 @@ class _HomePageState extends State<HomePage> {
     } catch (error) {
       print('Error fetching records: $error');
     }
-
     return cards;
   }
 
   String _formatday(DateTime date) {
     final day = DateFormat.d().format(date);
     final suffix = _getDaySuffix(int.parse(day));
-
     return DateFormat("h:mm a").format(date);
   }
 
@@ -310,22 +305,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   String _formatDistance(double distanceInMeters) {
-    // Convert meters to kilometers
     double distanceInKm = distanceInMeters / 1000.0;
-
-    // Format distance to 2 decimal digits
     String formattedDistance = distanceInKm.toStringAsFixed(2);
-
     return '$formattedDistance km';
   }
 
   String _formatTime(double timeInSeconds) {
     if (timeInSeconds >= 3600.0) {
-      // Convert seconds to hours
       double timeInHours = timeInSeconds / 3600.0;
       return '${timeInHours.toStringAsFixed(2)} hours';
     } else if (timeInSeconds >= 60.0) {
-      // Convert seconds to minutes
       double timeInMinutes = timeInSeconds / 60.0;
       return '${timeInMinutes.toStringAsFixed(2)} minutes';
     } else {

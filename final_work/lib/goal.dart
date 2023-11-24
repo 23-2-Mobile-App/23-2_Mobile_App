@@ -75,6 +75,7 @@ class _GoalPageState extends State<GoalPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: Text('Goal',style: TextStyle(color: Colors.white),),
         backgroundColor: Color(0xFF080910),
@@ -108,7 +109,6 @@ class _GoalPageState extends State<GoalPage> {
               child: Padding(
                 padding: EdgeInsets.only(left: 1.0, top: 20.0),
                 child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,17 +132,6 @@ class _GoalPageState extends State<GoalPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.center,
-                              //   crossAxisAlignment: CrossAxisAlignment.center,
-                              //   children: [
-                              //     Text('Dance',style: TextStyle(fontFamily: 'Noto_Serif_KR')),
-                              //     Switch(
-                              //       value: isDance?.value ?? false,
-                              //       onChanged: (value) => toggleDance(value),
-                              //     ),
-                              //   ],
-                              // ),
                               Text('$user_RC RC\n',style: TextStyle(
                                 fontSize: 20,
                                 color: Color(0xFF51C4F2),
@@ -164,7 +153,6 @@ class _GoalPageState extends State<GoalPage> {
                 ),
               ),
             ),
-
           ),
           Positioned(
           bottom: MediaQuery.of(context).size.height/17,      //앱 화면 높이 double Ex> 692,

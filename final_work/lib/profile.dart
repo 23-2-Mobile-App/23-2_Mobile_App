@@ -23,10 +23,10 @@ class _ProfilePageState extends State<ProfilePage> {
     User? user = auth.currentUser;
 
     if (user != null) {
-      user_name= user.displayName;
-      user_image=user.photoURL;
-      total_run=1;
-      user_RC="Kuyper";
+      user_name = user.displayName;
+      user_image = user.photoURL;
+      total_run = 1;
+      user_RC = "Kuyper";
     }
   }
 
@@ -34,66 +34,85 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     _getUserInfo();
     return Scaffold(
-      backgroundColor: const Color(0xFF51C4F2), // Set the background color here
-      appBar: AppBar(
-        title: Text('Profile'),
-        backgroundColor: const Color(0xFF51C4F2),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              // Log out the user and navigate to the login page
-              Provider.of<FirebaseAuthProvider>(context, listen: false).signOut();
-              Navigator.pushReplacementNamed(context, '/login');
-            },
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF080910), Color(0xFF141926)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-        ],
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+        ),
+        child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Consumer<FirebaseAuthProvider>(
-                builder: (context, authProvider, _) {
-                  return Column(
+              AppBar(
+                title: Text(
+                  'Profile',
+                  style: TextStyle(color: Colors.white),
+                ),
+                backgroundColor: Colors.transparent,
+                elevation: 0, // Remove the shadow
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.exit_to_app, color: Colors.white),
+                    onPressed: () {
+                      Provider.of<FirebaseAuthProvider>(context, listen: false).signOut();
+                      Navigator.pushReplacementNamed(context, '/login');
+                    },
+                  ),
+                ],
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: NetworkImage(
-                          authProvider.currentUser?.photoURL ?? '',
-                        ),
-                      ),
-                      DefaultTextStyle(
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'inter',
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(height: 7),
-                            Text('Email: ${authProvider.currentUser?.email ?? ""}'),
-                            SizedBox(height: 7),
-                            Text('$user_name님'),
-                            SizedBox(height: 7),
-                            Text('$user_RC RC'),
-                          ],
-                        ),
+                      Consumer<FirebaseAuthProvider>(
+                        builder: (context, authProvider, _) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 50,
+                                backgroundImage: NetworkImage(
+                                  authProvider.currentUser?.photoURL ?? '',
+                                ),
+                              ),
+                              DefaultTextStyle(
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'inter',
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(height: 7),
+                                    Text('Email: ${authProvider.currentUser?.email ?? ""}'),
+                                    SizedBox(height: 7),
+                                    Text('$user_name님'),
+                                    SizedBox(height: 7),
+                                    Text('$user_RC RC'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ],
-                  );
-                },
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
       bottomNavigationBar: SalomonBottomBar(
+        backgroundColor: Colors.black,
         currentIndex: _currentIndex,
         onTap: (int index) {
           setState(() {

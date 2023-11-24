@@ -162,6 +162,7 @@ class _MapScreenState extends State<MapScreen> {
   }
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           GoogleMap(
