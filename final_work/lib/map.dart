@@ -163,11 +163,11 @@ class _MapScreenState extends State<MapScreen> {
                   height: 200.0,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Color(0xFF2f294b).withOpacity(0.8),
+                      color: Color(0xFF13325A).withOpacity(0.8),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.only(left: 20.0, top: 20.0),
+                      padding: EdgeInsets.only(left: 20.0, top: 60.0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -175,7 +175,7 @@ class _MapScreenState extends State<MapScreen> {
                             radius: 30,
                             backgroundImage: NetworkImage(user_image ?? ''),
                           ),
-                          SizedBox(width: 22), // Add some space between the image and text
+                          SizedBox(width: 40), // Add some space between the image and text
                           DefaultTextStyle(
                             style: TextStyle(
                               fontSize: 17,
