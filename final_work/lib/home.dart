@@ -27,8 +27,8 @@ class _HomePageState extends State<HomePage> {
       builder: (context, recordProvider, child) {
         return SafeArea(
           child: Scaffold(
-            backgroundColor: const Color(0xFF51C4F2),
-            // backgroundColor: const Color(0xFF080910),
+            // backgroundColor: const Color(0xFF51C4F2),
+            backgroundColor: const Color(0xFF141825),
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -52,6 +52,8 @@ class _HomePageState extends State<HomePage> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
+                                // color: Color(0xFF51C4F2),
+
                                 fontFamily: 'Inter',
                               ),
                             ),
@@ -75,6 +77,7 @@ class _HomePageState extends State<HomePage> {
                     'Running Record',
                     style: TextStyle(
                       fontSize: 25,
+                        // color: Color(0xFF51C4F2),
                       color: Colors.white,
                       fontFamily: 'kanit',
                     ),
