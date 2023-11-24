@@ -1,4 +1,5 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'model/model_auth.dart';
@@ -12,14 +13,31 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   int _currentIndex = 3;
+  String? user_name;
+  String? user_RC;
+  String? user_image;
+  int? total_run;
+
+  void _getUserInfo() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      user_name= user.displayName;
+      user_image=user.photoURL;
+      total_run=1;
+      user_RC="Kuyper";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    _getUserInfo();
     return Scaffold(
-      backgroundColor: Color(0xFF01C1FD), // Set the background color here
+      backgroundColor: const Color(0xFF51C4F2), // Set the background color here
       appBar: AppBar(
         title: Text('Profile'),
-        backgroundColor: Color(0xFF01C1FD),
+        backgroundColor: const Color(0xFF51C4F2),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.exit_to_app),
@@ -39,92 +57,88 @@ class _ProfilePageState extends State<ProfilePage> {
             children: <Widget>[
               Consumer<FirebaseAuthProvider>(
                 builder: (context, authProvider, _) {
-
-                  if (authProvider.currentUser == null) {
-                    return Center(
-                        child: Text(
-                          'Loading...',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage(
+                          authProvider.currentUser?.photoURL ?? '',
                         ),
-                      );
-                  }
-                  if (authProvider.currentUser?.isAnonymous ?? false) {
-                    // Display information for anonymous user
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.network(
-                          'http://handong.edu/site/handong/res/img/logo.png',
-                          width: 100,
-                          height: 100,
+                      ),
+                      DefaultTextStyle(
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'inter',
                         ),
-                        Text('UID: ${authProvider.currentUser?.uid ?? "Anonymous"}'),
-                        Text('Email: Anonymous'),
-                      ],
-                    );
-                  } else {
-                    // Display information for authenticated user
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(
-                            authProvider.currentUser?.photoURL ?? '',
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 7),
+                            Text('Email: ${authProvider.currentUser?.email ?? ""}'),
+                            SizedBox(height: 7),
+                            Text('$user_name님'),
+                            SizedBox(height: 7),
+                            Text('$user_RC RC'),
+                          ],
                         ),
-                        Text('UID: ${authProvider.currentUser?.uid ?? ""}'),
-                        Text('Email: ${authProvider.currentUser?.email ?? ""}'),
-                      ],
-                    );
-                  }
+                      ),
+                    ],
+                  );
                 },
-              ),
-              const SizedBox(height: 20),
-              const Text('SeokWon Kim', style: TextStyle(fontSize: 14)),
-              const SizedBox(height: 20),
-              const Text(
-                'I promise to take the test honestly before GOD',
-                style: TextStyle(fontSize: 14),
               ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: ConvexAppBar(
-        backgroundColor: Colors.white,
-        style: TabStyle.react,
-        items: [
-          TabItem(icon: Icons.menu, title: 'DashBoard'),
-          TabItem(icon: Icons.emoji_events, title: 'Run'),
-          TabItem(icon: Icons.chat, title: 'Goal'),
-          TabItem(icon: Icons.person, title: 'Profile'),
-        ],
-        initialActiveIndex: _currentIndex,
-        activeColor: Color(0xFF51C4F2), // Set the color of active (selected) icon and text to black
-        color: Colors.grey,
+      bottomNavigationBar: SalomonBottomBar(
+        currentIndex: _currentIndex,
         onTap: (int index) {
-          // Handle tab selection
-          _currentIndex = index;
-          // Add your logic based on the selected tab index
-          switch (index) {
-            case 0:
-              Navigator.pushReplacementNamed(context, '/');
-              break;
-            case 1:
-              Navigator.pushReplacementNamed(context, '/mapPage');
-              break;
-            case 2:
-              Navigator.pushReplacementNamed(context, '/goalPage');
-              break;
-            case 3:
-              break;
-          }
+          setState(() {
+            _currentIndex = index;
+            switch (index) {
+              case 0:
+                break;
+              case 1:
+                Navigator.pushReplacementNamed(context, '/mapPage');
+                break;
+              case 2:
+                Navigator.pushReplacementNamed(context, '/goalPage');
+                break;
+              case 3:
+                Navigator.pushReplacementNamed(context, '/profilePage');
+                break;
+            }
+          });
         },
+        items: [
+          SalomonBottomBarItem(
+            icon: Icon(Icons.menu),
+            title: Text("Dashboard"),
+            selectedColor: Color(0xFF51C4F2),
+            unselectedColor: Colors.white,
+          ),
+          SalomonBottomBarItem(
+            icon: Icon(Icons.emoji_events),
+            title: Text("Run"),
+            selectedColor: Color(0xFF51C4F2),
+            unselectedColor: Colors.white,
+          ),
+          SalomonBottomBarItem(
+            icon: Icon(Icons.chat),
+            title: Text("Goal"),
+            selectedColor: Color(0xFF51C4F2),
+            unselectedColor: Colors.white,
+          ),
+          SalomonBottomBarItem(
+            icon: Icon(Icons.person),
+            title: Text("Profile"),
+            selectedColor: Color(0xFF51C4F2),
+            unselectedColor: Colors.white,
+          ),
+        ],
       ),
     );
   }

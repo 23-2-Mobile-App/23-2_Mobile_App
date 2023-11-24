@@ -8,7 +8,7 @@ import 'model/model_auth.dart';
 import 'model/model_record.dart';
 import 'model/record.dart';
 import 'model/users.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -27,129 +27,151 @@ class _HomePageState extends State<HomePage> {
       builder: (context, recordProvider, child) {
         return SafeArea(
           child: Scaffold(
-            // backgroundColor: const Color(0xFF51C4F2),
-            backgroundColor: const Color(0xFF141825),
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(25.0, 40.0, 16.0, 16.0),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        'assets/eagle.png',
-                        width: 50,
-                        height: 50,
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '안녕하세요, ${_firebaseAuthProvider.getUsername() ?? ''} 님',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                // color: Color(0xFF51C4F2),
-
-                                fontFamily: 'Inter',
-                              ),
-                            ),
-                            Text(
-                              'Beginner',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                                fontFamily: 'Inter',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+            backgroundColor: Colors.transparent,
+            body: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF080910), Color(0xFF141926)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(25.0, 25.0, 16.0, 25.0),
-                  child: Text(
-                    'Running Record',
-                    style: TextStyle(
-                      fontSize: 25,
-                        // color: Color(0xFF51C4F2),
-                      color: Colors.white,
-                      fontFamily: 'kanit',
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(25.0, 40.0, 16.0, 16.0),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          'assets/eagle.png',
+                          width: 50,
+                          height: 50,
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '안녕하세요, ${_firebaseAuthProvider.getUsername() ?? ''} 님',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                              Text(
+                                'Beginner',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontFamily: 'Inter',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                Expanded(
-                  child: FutureBuilder<List<Widget>>(
-                    future: _buildGridCards(context, recordProvider),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: Text(
-                            'Loading...',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        );
-                      }
-
-                      if (!snapshot.hasData || snapshot.data == null) {
-                        return Text('No data available');
-                      }
-
-                      return GridView.count(
-                        crossAxisCount: 2,
-                        padding: const EdgeInsets.all(16.0),
-                        childAspectRatio: 13.0 / 10.0, // Adjust this ratio to change the size of the cards
-                        children: snapshot.data!,
-                      );
-                    },
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(25.0, 25.0, 16.0, 25.0),
+                    child: Text(
+                      'Running Record',
+                      style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.white,
+                        fontFamily: 'kanit',
+                      ),
+                    ),
                   ),
+                  Expanded(
+                    child: FutureBuilder<List<Widget>>(
+                      future: _buildGridCards(context, recordProvider),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: Text(
+                              'Loading...',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          );
+                        }
+
+                        if (!snapshot.hasData || snapshot.data == null) {
+                          return Text('No data available');
+                        }
+
+                        return GridView.count(
+                          crossAxisCount: 2,
+                          padding: const EdgeInsets.all(16.0),
+                          childAspectRatio: 13.0 / 10.0,
+                          // Adjust this ratio to change the size of the cards
+                          children: snapshot.data!,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            bottomNavigationBar: SalomonBottomBar(
+              currentIndex: _currentIndex,
+              onTap: (int index) {
+                setState(() {
+                  _currentIndex = index;
+                  switch (index) {
+                    case 0:
+                      break;
+                    case 1:
+                      Navigator.pushReplacementNamed(context, '/mapPage');
+                      break;
+                    case 2:
+                      Navigator.pushReplacementNamed(context, '/goalPage');
+                      break;
+                    case 3:
+                      Navigator.pushReplacementNamed(context, '/profilePage');
+                      break;
+                  }
+                });
+              },
+              items: [
+                SalomonBottomBarItem(
+                  icon: Icon(Icons.menu),
+                  title: Text("Dashboard"),
+                  selectedColor: Color(0xFF51C4F2),
+                  unselectedColor: Colors.white,
+                ),
+                SalomonBottomBarItem(
+                  icon: Icon(Icons.emoji_events),
+                  title: Text("Run"),
+                  selectedColor: Color(0xFF51C4F2),
+                  unselectedColor: Colors.white,
+                ),
+                SalomonBottomBarItem(
+                  icon: Icon(Icons.chat),
+                  title: Text("Goal"),
+                  selectedColor: Color(0xFF51C4F2),
+                  unselectedColor: Colors.white,
+                ),
+                SalomonBottomBarItem(
+                  icon: Icon(Icons.person),
+                  title: Text("Profile"),
+                  selectedColor: Color(0xFF51C4F2),
+                  unselectedColor: Colors.white,
                 ),
               ],
-            ),
-            bottomNavigationBar: ConvexAppBar(
-              backgroundColor: Colors.white,
-              style: TabStyle.react,
-              items: [
-                TabItem(icon: Icons.menu, title: 'DashBoard'),
-                TabItem(icon: Icons.emoji_events, title: 'Run'),
-                TabItem(icon: Icons.chat, title: 'Goal'),
-                TabItem(icon: Icons.person, title: 'Profile'),
-              ],
-              initialActiveIndex: _currentIndex,
-              activeColor: Color(0xFF51C4F2), // Set the color of active (selected) icon and text to black
-              color: Colors.grey,
-              onTap: (int index) {
-                // Handle tab selection
-                  _currentIndex = index;
-                // Add your logic based on the selected tab index
-                switch (index) {
-                  case 0:
-
-                    break;
-                  case 1:
-                    Navigator.pushReplacementNamed(context, '/mapPage');
-                    break;
-                  case 2:
-                    Navigator.pushReplacementNamed(context, '/goalPage');
-                    break;
-                  case 3:
-                    Navigator.pushReplacementNamed(context, '/profilePage');
-                    break;
-                }
-              },
             ),
           ),
         );
@@ -179,7 +201,8 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(left: 8.0, top: 8.0), // Adjust the left padding as needed
+                          padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+                          // Adjust the left padding as needed
                           child: Text(
                             _formatDate(record.date.toDate()),
                             style: TextStyle(
@@ -189,7 +212,8 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 8.0), // Adjust the left padding as needed
+                          padding: const EdgeInsets.only(left: 8.0),
+                          // Adjust the left padding as needed
                           child: Text(
                             _formatday(record.date.toDate()),
                             style: TextStyle(
@@ -263,9 +287,10 @@ class _HomePageState extends State<HomePage> {
     final day = DateFormat.d().format(date);
     final suffix = _getDaySuffix(int.parse(day));
 
-    return DateFormat("MMMM $day").format(date) + suffix + DateFormat(", y").format(date);
+    return DateFormat("MMMM $day").format(date) +
+        suffix +
+        DateFormat(", y").format(date);
   }
-
 
   String _getDaySuffix(int day) {
     if (day >= 11 && day <= 13) {
