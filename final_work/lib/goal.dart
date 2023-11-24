@@ -1,4 +1,4 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -200,36 +200,52 @@ class _GoalPageState extends State<GoalPage> {
 
       ),
 
-      bottomNavigationBar: ConvexAppBar(
-        backgroundColor: Colors.white,
-        style: TabStyle.react,
-        items: [
-          TabItem(icon: Icons.menu, title: 'DashBoard'),
-          TabItem(icon: Icons.emoji_events, title: 'Run'),
-          TabItem(icon: Icons.chat, title: 'Goal'),
-          TabItem(icon: Icons.person, title: 'Profile'),
-        ],
-        initialActiveIndex: _currentIndex,
-        activeColor: Color(0xFF51C4F2), // Set the color of active (selected) icon and text to black
-        color: Colors.grey,
+      bottomNavigationBar: SalomonBottomBar(
+        currentIndex: _currentIndex,
         onTap: (int index) {
-          // Handle tab selection
-          _currentIndex = index;
-          // Add your logic based on the selected tab index
-          switch (index) {
-            case 0:
-              Navigator.pushReplacementNamed(context, '/');
-              break;
-            case 1:
-              Navigator.pushReplacementNamed(context, '/mapPage');
-              break;
-            case 2:
-              break;
-            case 3:
-              Navigator.pushReplacementNamed(context, '/profilePage');
-              break;
-          }
+          setState(() {
+            _currentIndex = index;
+            switch (index) {
+              case 0:
+                break;
+              case 1:
+                Navigator.pushReplacementNamed(context, '/mapPage');
+                break;
+              case 2:
+                Navigator.pushReplacementNamed(context, '/goalPage');
+                break;
+              case 3:
+                Navigator.pushReplacementNamed(context, '/profilePage');
+                break;
+            }
+          });
         },
+        items: [
+          SalomonBottomBarItem(
+            icon: Icon(Icons.menu),
+            title: Text("Dashboard"),
+            selectedColor: Color(0xFF51C4F2),
+            unselectedColor: Colors.white,
+          ),
+          SalomonBottomBarItem(
+            icon: Icon(Icons.emoji_events),
+            title: Text("Run"),
+            selectedColor: Color(0xFF51C4F2),
+            unselectedColor: Colors.white,
+          ),
+          SalomonBottomBarItem(
+            icon: Icon(Icons.chat),
+            title: Text("Goal"),
+            selectedColor: Color(0xFF51C4F2),
+            unselectedColor: Colors.white,
+          ),
+          SalomonBottomBarItem(
+            icon: Icon(Icons.person),
+            title: Text("Profile"),
+            selectedColor: Color(0xFF51C4F2),
+            unselectedColor: Colors.white,
+          ),
+        ],
       ),
     );
   }
