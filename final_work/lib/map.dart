@@ -239,9 +239,9 @@ class _MapScreenState extends State<MapScreen> {
             _currentIndex = index;
             switch (index) {
               case 0:
+                Navigator.pushReplacementNamed(context, '/');
                 break;
               case 1:
-                Navigator.pushReplacementNamed(context, '/mapPage');
                 break;
               case 2:
                 Navigator.pushReplacementNamed(context, '/goalPage');

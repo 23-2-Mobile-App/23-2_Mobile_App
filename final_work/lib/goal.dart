@@ -207,12 +207,12 @@ class _GoalPageState extends State<GoalPage> {
             _currentIndex = index;
             switch (index) {
               case 0:
+                Navigator.pushReplacementNamed(context, '/');
                 break;
               case 1:
                 Navigator.pushReplacementNamed(context, '/mapPage');
                 break;
               case 2:
-                Navigator.pushReplacementNamed(context, '/goalPage');
                 break;
               case 3:
                 Navigator.pushReplacementNamed(context, '/profilePage');

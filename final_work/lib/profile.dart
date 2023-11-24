@@ -100,6 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
             _currentIndex = index;
             switch (index) {
               case 0:
+                Navigator.pushReplacementNamed(context, '/');
                 break;
               case 1:
                 Navigator.pushReplacementNamed(context, '/mapPage');
@@ -108,7 +109,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 Navigator.pushReplacementNamed(context, '/goalPage');
                 break;
               case 3:
-                Navigator.pushReplacementNamed(context, '/profilePage');
                 break;
             }
           });
