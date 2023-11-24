@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/services.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rive/rive.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -13,6 +15,9 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  SMIBool? isDance;
+  SMITrigger? isLookUp;
+  Artboard? riveArtboard;
   late GoogleMapController _controller;
   bool _myLocationEnabled = false;
   Set<Marker> _markers = {};
@@ -25,12 +30,14 @@ class _MapScreenState extends State<MapScreen> {
   String? user_image;
   int? total_run;
   int _currentIndex =0;
-  Timer? _locationTimer; 
+  Timer? _locationTimer;
+
 
   @override
   void initState() {
     super.initState();
     _currentIndex =1;
+    loadRive();
     _locationSubscription = Geolocator.getPositionStream(
       desiredAccuracy: LocationAccuracy.best,
       distanceFilter: 10,
@@ -128,6 +135,23 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  Future<void> loadRive() async {
+    final data = await rootBundle.load('assets/dash_flutter_muscot.riv');
+    try {
+      final file = RiveFile.import(data);
+      final artboard = file.mainArtboard;
+      var controller = StateMachineController.fromArtboard(artboard, 'birb');
+      if (controller != null) {
+        artboard.addController(controller);
+        isDance = controller.findSMI('dance');
+        isLookUp = controller.findSMI('look up');
+      }
+      setState(() => riveArtboard = artboard);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -157,46 +181,100 @@ class _MapScreenState extends State<MapScreen> {
           ),
           Center(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 100),
-                SizedBox(
-                  width: 400.0,
-                  height: 200.0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xFF13325A).withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20.0, top: 60.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(user_image ?? ''),
-                          ),
-                          SizedBox(width: 40), // Add some space between the image and text
-                          DefaultTextStyle(
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'inter',
+                // SizedBox(
+                //   width: 400.0,
+                //   height: 200.0,
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       color: Color(0xFF13325A).withOpacity(0.8),
+                //       borderRadius: BorderRadius.circular(10.0),
+                //     ),
+                //     child: Padding(
+                //       padding: EdgeInsets.only(left: 20.0, top: 60.0),
+                //       child: Row(
+                //         crossAxisAlignment: CrossAxisAlignment.start,
+                //         children: [
+                //           CircleAvatar(
+                //             radius: 30,
+                //             backgroundImage: NetworkImage(user_image ?? ''),
+                //           ),
+                //           SizedBox(width: 40), // Add some space between the image and text
+                //           DefaultTextStyle(
+                //             style: TextStyle(
+                //               fontSize: 17,
+                //               color: Colors.white,
+                //               fontWeight: FontWeight.w600,
+                //               fontFamily: 'inter',
+                //             ),
+                //             child: Column(
+                //               crossAxisAlignment: CrossAxisAlignment.start,
+                //               children: [
+                //                 Text('$user_RC RC'),
+                //                 SizedBox(height: 10),
+                //                 Text('$user_name님'),
+                //                 SizedBox(height: 8),
+                //                 Text('이번주 런닝 횟수는 $total_run회입니다'),
+                //               ],
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                Container(
+                  width: 400,
+                  height: 200,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 1.0, top: 20.0),
+                    child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            riveArtboard != null ?
+                            Container(
+                              width: 120,
+                              height: 120,
+                              child: Rive(artboard: riveArtboard!),
+                            )
+                                : CircularProgressIndicator(),
+                            SizedBox(width: 22), // Add some space between the image and text
+                            DefaultTextStyle(
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'inter',
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '$user_RC RC\n',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Color(0xFF51C4F2),
+                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic,
+                                      fontFamily: 'inter',
+                                    ),
+                                  ),
+                                  Text('$user_name님'),
+                                  SizedBox(height: 8),
+                                  Text('이번주 런닝 횟수는 $total_run회입니다'),
+                                  SizedBox(height: 8),
+                                ],
+                              ),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('$user_name님'),
-                                SizedBox(height: 8),
-                                Text('이번주 런닝 횟수는 $total_run회입니다'),
-                                SizedBox(height: 8),
-                                Text('$user_RC RC'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                        SizedBox(height: 40,),
+                      ],
                     ),
                   ),
                 ),
