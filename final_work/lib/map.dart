@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart' as flutter;
+import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,7 +25,7 @@ class _MapScreenState extends State<MapScreen> {
   Artboard? riveArtboard;
   late GoogleMapController _controller;
   bool _myLocationEnabled = false;
-  Set<Marker> _markers = {};
+  Set<maps.Marker> _markers = {};
   Set<Polyline> _polylines = {};
   List<LatLng> _polylineCoordinates = [];
   late StreamSubscription<Position> _locationSubscription;
@@ -67,7 +72,7 @@ class _MapScreenState extends State<MapScreen> {
     setState(() {
       _markers.clear();
       _markers.add(
-        Marker(
+        maps.Marker(
           markerId: MarkerId('userLocation'),
           position: newPosition,
           infoWindow: InfoWindow(title: 'Your Location', snippet: user_name ?? ''),
@@ -104,7 +109,7 @@ class _MapScreenState extends State<MapScreen> {
     setState(() {
       _markers.clear();
       _markers.add(
-        Marker(
+        maps.Marker(
           markerId: MarkerId('userLocation'),
           position: LatLng(position.latitude, position.longitude),
           infoWindow: InfoWindow(title: 'Your Location', snippet: user_name ?? ''),
@@ -228,22 +233,30 @@ class _MapScreenState extends State<MapScreen> {
                 Container(
                   width: 400,
                   height: 200,
+                  decoration: BoxDecoration(
+                    gradient: flutter.LinearGradient(
+                      colors: [Color(0xFF080910), Color(0xFF141926)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                   child: Padding(
-                    padding: EdgeInsets.only(left: 1.0, top: 20.0),
+                    padding: EdgeInsets.only(left: 35.0, top: 40.0),
                     child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            riveArtboard != null ?
-                            Container(
+                            riveArtboard != null
+                                ? Container(
                               width: 120,
                               height: 120,
                               child: Rive(artboard: riveArtboard!),
                             )
                                 : CircularProgressIndicator(),
-                            SizedBox(width: 22), // Add some space between the image and text
+                            SizedBox(width: 22),
                             DefaultTextStyle(
                               style: TextStyle(
                                 fontSize: 17,
@@ -273,7 +286,7 @@ class _MapScreenState extends State<MapScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 40,),
+                        SizedBox(height: 40),
                       ],
                     ),
                   ),
@@ -286,10 +299,10 @@ class _MapScreenState extends State<MapScreen> {
                       '/countdownPage',
                     );
                   },
-                  child: Image.asset(
-                    'assets/start_run.png',
-                    height: 100.0,
-                    width: 100.0,
+                  child: Lottie.asset(
+                    'assets/start_run.json',
+                    height: 150.0,
+                    width: 150.0,
                   ),
                 ),
                 GestureDetector(
