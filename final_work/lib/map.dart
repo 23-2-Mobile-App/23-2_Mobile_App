@@ -189,47 +189,6 @@ class _MapScreenState extends State<MapScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 100),
-                // SizedBox(
-                //   width: 400.0,
-                //   height: 200.0,
-                //   child: Container(
-                //     decoration: BoxDecoration(
-                //       color: Color(0xFF13325A).withOpacity(0.8),
-                //       borderRadius: BorderRadius.circular(10.0),
-                //     ),
-                //     child: Padding(
-                //       padding: EdgeInsets.only(left: 20.0, top: 60.0),
-                //       child: Row(
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         children: [
-                //           CircleAvatar(
-                //             radius: 30,
-                //             backgroundImage: NetworkImage(user_image ?? ''),
-                //           ),
-                //           SizedBox(width: 40), // Add some space between the image and text
-                //           DefaultTextStyle(
-                //             style: TextStyle(
-                //               fontSize: 17,
-                //               color: Colors.white,
-                //               fontWeight: FontWeight.w600,
-                //               fontFamily: 'inter',
-                //             ),
-                //             child: Column(
-                //               crossAxisAlignment: CrossAxisAlignment.start,
-                //               children: [
-                //                 Text('$user_RC RC'),
-                //                 SizedBox(height: 10),
-                //                 Text('$user_name님'),
-                //                 SizedBox(height: 8),
-                //                 Text('이번주 런닝 횟수는 $total_run회입니다'),
-                //               ],
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 Container(
                   width: 400,
                   height: 200,
@@ -291,6 +250,7 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 300),
                 GestureDetector(
                   onTap: () {
