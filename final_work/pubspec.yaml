@@ -53,6 +53,8 @@ flutter:
     - assets/dash_flutter_muscot.riv
     - assets/water-bar-demo.riv
     - assets/start_run.json
+    - assets/timer.json
+    - assets/road.json
 
 
 
