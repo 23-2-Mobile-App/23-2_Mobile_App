@@ -127,16 +127,21 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  void _getUserInfo() {
+  void _getUserInfo() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
 
     if (user != null) {
-      email = user.email;
-      user_name= user.displayName;
-      user_image=user.photoURL;
-      total_run=1;
-      user_RC="Kuyper";
+      // Get additional user information from Firestore
+      DocumentSnapshot<Map<String, dynamic>> userDocument = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+      if (userDocument.exists) {
+        // Access the fields from the user document
+        user_name = user.displayName;
+        user_image = user.photoURL;
+        total_run = userDocument.data()?['total_run'];
+        user_RC = userDocument.data()?['user_RC'];
+      }
     }
   }
 
