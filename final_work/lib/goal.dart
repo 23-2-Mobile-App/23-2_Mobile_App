@@ -66,11 +66,9 @@ class _GoalPageState extends State<GoalPage> {
   void initState() {
     _getUserInfo();
     loadRive();
-    if (total_run!.toInt() > 0) {
-      toggleDance(true);
-    }
-    currentLevel = total_run!.toDouble();
-    currentLevel = currentLevel * 20;
+    currentLevel = (total_run!.toDouble()+1.0);
+    // currentLevel = 1.0;
+    currentLevel = currentLevel ;
     super.initState();
   }
 
