@@ -82,22 +82,22 @@ class FirebaseAuthProvider with ChangeNotifier {
         'uid': user?.uid,
         'email': user?.email,
         'user_name': user?.displayName,
-        'sum_distance': "100",
-        'sum_time': "100",
-        'user_RC': "100",
+        'sum_distance': 0,
+        'sum_time': 0,
+        'user_RC': "NEED TO SET ON PROFILE PAGE",
         'user_image': user?.photoURL,
-        'total_run' : "0",
+        'total_run' : 0,
       });
     } else {
       // If the user document already exists, update it with the latest information
       await userDoc.update({
         'email': user?.email,
         'user_name': user?.displayName,
-        'sum_distance': "100",
-        'sum_time': "100",
-        'user_RC': "100",
+        'sum_distance': 0,
+        'sum_time': 0,
+        'user_RC': "NEED TO SET ON PROFILE PAGE",
         'user_image': user?.photoURL,
-        'total_run' : '0',
+        'total_run' : 0,
       });
     }
     notifyListeners();
