@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                   bool success =
                   await _authProvider.signInWithGoogle(context);
                   if (success) {
-                    Navigator.of(context).pop();
+                    Navigator.pushNamedAndRemoveUntil(context, '/' , (route) => false);
                   }
                 },
                 child: Text('GOOGLE',style: TextStyle(fontFamily: 'Noto_Serif_KR',
