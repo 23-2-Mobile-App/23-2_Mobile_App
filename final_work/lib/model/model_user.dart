@@ -40,26 +40,4 @@
 //       throw e;
 //     }
 //   }
-//
-//   // Future<bool> isItemInWishlist(String itemId, String userId) async {
-//   //   try {
-//   //     // itemId와 userId가 비어 있거나 null이면 false를 반환
-//   //     if (itemId == null || itemId.isEmpty || userId == null || userId.isEmpty) {
-//   //       print('Item ID 또는 User ID가 유효하지 않습니다.');
-//   //       return false;
-//   //     }
-//   //
-//   //     DocumentSnapshot<Map<String, dynamic>> wishlistDocument = await _firestore
-//   //         .collection('users')
-//   //         .doc(userId)
-//   //         .collection('wish_list')
-//   //         .doc(itemId)
-//   //         .get();
-//   //     return wishlistDocument.exists;
-//   //   } catch (e) {
-//   //     print('Error checking if item is in wishlist: $e');
-//   //     throw e;
-//   //   }
-//   // }
-//
 // }
