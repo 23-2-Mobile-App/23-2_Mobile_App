@@ -91,13 +91,10 @@ class FirebaseAuthProvider with ChangeNotifier {
     } else {
       // If the user document already exists, update it with the latest information
       await userDoc.update({
+        'uid': user?.uid,
         'email': user?.email,
         'user_name': user?.displayName,
-        'sum_distance': 0,
-        'sum_time': 0,
-        'user_RC': "NEED TO SET ON PROFILE PAGE",
         'user_image': user?.photoURL,
-        'total_run' : 0,
       });
     }
     notifyListeners();
