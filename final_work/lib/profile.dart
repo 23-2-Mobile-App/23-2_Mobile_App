@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,20 +14,26 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   int _currentIndex = 3;
-  String? user_name;
-  String? user_RC;
-  String? user_image;
-  int? total_run;
+  String? userName;
+  String? userRC;
+  String? userImage;
+  int? totalRun;
 
-  void _getUserInfo() {
+  void _getUserInfo() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
 
     if (user != null) {
-      user_name = user.displayName;
-      user_image = user.photoURL;
-      total_run = 1;
-      user_RC = "Kuyper";
+      // Get additional user information from Firestore
+      DocumentSnapshot<Map<String, dynamic>> userDocument = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+      if (userDocument.exists) {
+        // Access the fields from the user document
+        userName = user.displayName;
+        userImage = user.photoURL;
+        totalRun = userDocument.data()?['total_run'];
+        userRC = userDocument.data()?['user_RC'];
+      }
     }
   }
 
@@ -34,79 +41,105 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     _getUserInfo();
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF080910), Color(0xFF141926)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: Text(
+          'Profile',
+          style: TextStyle(color: Colors.white),
         ),
-        child: SafeArea(
+        elevation: 0,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app, color: Colors.white),
+            onPressed: () {
+              Provider.of<FirebaseAuthProvider>(context, listen: false).signOut();
+              Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+            },
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF080910), Color(0xFF141926)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              AppBar(
-                title: Text(
-                  'Profile',
-                  style: TextStyle(color: Colors.white),
-                ),
-                backgroundColor: Colors.transparent,
-                elevation: 0, // Remove the shadow
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.exit_to_app, color: Colors.white),
-                    onPressed: () {
-                      Provider.of<FirebaseAuthProvider>(context, listen: false).signOut();
-                      Navigator.pushReplacementNamed(context, '/login');
-                    },
+              Stack(
+                children: [
+                  SizedBox(
+                    width: 120,
+                    height: 120,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(200),
+                      child: Image.network(
+                        Provider.of<FirebaseAuthProvider>(
+                            context,
+                            listen: false)
+                            .currentUser
+                            ?.photoURL ??
+                            '',
+                      ),
+                    ),
                   ),
                 ],
               ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
+              const SizedBox(height: 10),
+              Consumer<FirebaseAuthProvider>(
+                builder: (context, authProvider, _) {
+                  return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Consumer<FirebaseAuthProvider>(
-                        builder: (context, authProvider, _) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              CircleAvatar(
-                                radius: 50,
-                                backgroundImage: NetworkImage(
-                                  authProvider.currentUser?.photoURL ?? '',
-                                ),
-                              ),
-                              DefaultTextStyle(
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'inter',
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(height: 7),
-                                    Text('Email: ${authProvider.currentUser?.email ?? ""}'),
-                                    SizedBox(height: 7),
-                                    Text('$user_name님'),
-                                    SizedBox(height: 7),
-                                    Text('$user_RC RC'),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          );
-                        },
+                      DefaultTextStyle(
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'inter',
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 7),
+                            Text(
+                                'Email: ${authProvider.currentUser?.email ?? ""}'),
+                            SizedBox(height: 7),
+                            Text('$userName님'),
+                            SizedBox(height: 7),
+                            Text('$userRC RC'),
+                          ],
+                        ),
                       ),
                     ],
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: 200,
+                child: ElevatedButton(
+                  onPressed: () =>
+                      Navigator.pushReplacementNamed(context, '/edit'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    side: BorderSide.none,
+                    shape: const StadiumBorder(),
                   ),
+                  child: const Text(
+                      'Edit Profile', style: TextStyle(color: Colors.white)),
                 ),
               ),
+              const SizedBox(height: 30),
+              const Divider(),
+              const SizedBox(height: 10),
+              // Add the remaining code as needed
             ],
           ),
         ),
