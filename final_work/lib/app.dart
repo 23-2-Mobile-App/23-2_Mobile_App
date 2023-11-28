@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:shrine/detail.dart';
 import 'package:shrine/add.dart';
 import 'package:shrine/edit.dart';
+import 'package:shrine/profileEdit.dart';
 import 'package:shrine/runPage.dart';
 import 'package:shrine/profile.dart';
 
@@ -40,12 +41,12 @@ class ShrineApp extends StatelessWidget {
         '/': (BuildContext context) => const HomePage(),
         '/mapPage': (BuildContext context) => MapScreen(),
         '/login': (BuildContext context) => const LoginPage(),
-        '/editPage' : (BuildContext context) => const EditPage(),
         '/profilePage' : (BuildContext context) => const ProfilePage(),
         '/countdownPage' : (BuildContext context) => const CountdownPage(),
         '/runPage' : (BuildContext context) => const RunPage(),
         '/savePage' : (BuildContext context) => const SavePage(),
         '/goalPage' : (BuildContext context) => const GoalPage(),
+        '/edit' : (BuildContext context) => const ProfileEditPage(),
       },
       // TODO: Customize the theme (103)
       theme: ThemeData.light(useMaterial3: true),
