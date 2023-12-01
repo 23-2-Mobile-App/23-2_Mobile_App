@@ -61,7 +61,7 @@ class _MapScreenState extends State<MapScreen> {
     _locationTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
       _getCurrentLocation();
     });
-    
+
     _getUserInfo();
   }
 
@@ -69,16 +69,16 @@ class _MapScreenState extends State<MapScreen> {
     final LatLng newPosition = LatLng(position.latitude, position.longitude);
 
     if(mounted)
-    setState(() {
-      _markers.clear();
-      _markers.add(
-        maps.Marker(
-          markerId: MarkerId('userLocation'),
-          position: newPosition,
-          infoWindow: InfoWindow(title: 'Your Location', snippet: user_name ?? ''),
-        ),
-      );
-    });
+      setState(() {
+        _markers.clear();
+        _markers.add(
+          maps.Marker(
+            markerId: MarkerId('userLocation'),
+            position: newPosition,
+            infoWindow: InfoWindow(title: 'Your Location', snippet: user_name ?? ''),
+          ),
+        );
+      });
 
     // Add the current location to the polyline
     _polylineCoordinates.add(newPosition);
@@ -106,25 +106,25 @@ class _MapScreenState extends State<MapScreen> {
     _controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     if(mounted)
-    setState(() {
-      _markers.clear();
-      _markers.add(
-        maps.Marker(
-          markerId: MarkerId('userLocation'),
-          position: LatLng(position.latitude, position.longitude),
-          infoWindow: InfoWindow(title: 'Your Location', snippet: user_name ?? ''),
-        ),
-      );
-    });
+      setState(() {
+        _markers.clear();
+        _markers.add(
+          maps.Marker(
+            markerId: MarkerId('userLocation'),
+            position: LatLng(position.latitude, position.longitude),
+            infoWindow: InfoWindow(title: 'Your Location', snippet: user_name ?? ''),
+          ),
+        );
+      });
 
     // Add the current location to the polyline
     _polylineCoordinates.add(LatLng(position.latitude, position.longitude));
 
     // Update the polylines on the map
-  if(mounted)
-    setState(() {
-      _myLocationEnabled = true;
-    });
+    if(mounted)
+      setState(() {
+        _myLocationEnabled = true;
+      });
   }
 
   void _getUserInfo() async {
@@ -231,8 +231,12 @@ class _MapScreenState extends State<MapScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+
+                                  // Check if user_RC is not equal to "NEED TO SET ON PROFILE PAGE" before displaying
                                   Text(
-                                    '$user_RC RC\n',
+                                    user_RC != "NEED TO SET ON PROFILE PAGE"
+                                        ? '$user_RC RC\n'
+                                        : '', // Display empty string if user_RC is "NEED TO SET ON PROFILE PAGE"
                                     style: TextStyle(
                                       fontSize: 20,
                                       color: Color(0xFF51C4F2),
@@ -316,13 +320,13 @@ class _MapScreenState extends State<MapScreen> {
             unselectedColor: Colors.white,
           ),
           SalomonBottomBarItem(
-            icon: Icon(Icons.emoji_events),
+            icon: Icon(Icons.directions_run),
             title: Text("Run"),
             selectedColor: Color(0xFF51C4F2),
             unselectedColor: Colors.white,
           ),
           SalomonBottomBarItem(
-            icon: Icon(Icons.chat),
+            icon: Icon(Icons.emoji_events),
             title: Text("Goal"),
             selectedColor: Color(0xFF51C4F2),
             unselectedColor: Colors.white,
