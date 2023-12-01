@@ -1,12 +1,20 @@
 import 'dart:async';
 import 'dart:core';
+import 'dart:typed_data';
+import 'dart:ui' as dui;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'model/record.dart';
+import 'package:screenshot/screenshot.dart';
+
 
 class RunPage extends StatefulWidget {
   const RunPage({Key? key}) : super(key: key);
@@ -15,6 +23,8 @@ class RunPage extends StatefulWidget {
 }
 
 class _RunPageState extends State<RunPage> {
+  GlobalKey globalKey = GlobalKey();
+
   late GoogleMapController _controller;
   bool _isArrowButtonPressed = true;
   double distance = 0.0; // 이동 거리 (미터)
@@ -29,6 +39,8 @@ class _RunPageState extends State<RunPage> {
   List<LatLng> _polylineCoordinates = [];
   late StreamSubscription<Position> _locationSubscription;
   String? userEmail;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late Record currentRecord = Record(
     date: Timestamp.now(),
     distance: 0.0,
@@ -272,12 +284,12 @@ class _RunPageState extends State<RunPage> {
 
                             IconButton(
                                 icon: const Icon(Icons.stop,size: 60,),
-                                onPressed: () {
+                                onPressed: () async {
                                   _timer.cancel();
                                   currentRecord.distance = distance;
                                   currentRecord.pace = pace;
                                   currentRecord.time = time;
-                                  currentRecord.imgURL = "0";
+                                  currentRecord.imgURL = '';
                                   Navigator.pop(context);
                                   Navigator.pushNamed(context,'/savePage', arguments: currentRecord);
                                 }
@@ -337,8 +349,8 @@ class _RunPageState extends State<RunPage> {
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Text( "${pace.toStringAsFixed(2)}",style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
-                                          Text('Time',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
+                                          Text( "--",style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black),),
+                                          Text('Kcal',style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black),),
                                         ],
                                       ), // check km
                                     ),
@@ -491,6 +503,9 @@ class _RunPageState extends State<RunPage> {
       ),
     );
   }
+
+
+
 
   String _formatTime(double seconds) {
     int minutes = (seconds / 60).floor();

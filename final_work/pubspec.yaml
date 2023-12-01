@@ -27,6 +27,9 @@ dependencies:
   lottie: ^2.7.0
   convex_bottom_bar: ^3.2.0
   salomon_bottom_bar: ^3.3.2
+  screenshot: 2.1.0
+
+
 
 dev_dependencies:
   flutter_test:

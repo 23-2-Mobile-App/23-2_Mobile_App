@@ -231,8 +231,12 @@ class _MapScreenState extends State<MapScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+
+                                  // Check if user_RC is not equal to "NEED TO SET ON PROFILE PAGE" before displaying
                                   Text(
-                                    '$user_RC RC\n',
+                                    user_RC != "NEED TO SET ON PROFILE PAGE"
+                                        ? '$user_RC RC\n'
+                                        : '', // Display empty string if user_RC is "NEED TO SET ON PROFILE PAGE"
                                     style: TextStyle(
                                       fontSize: 20,
                                       color: Color(0xFF51C4F2),

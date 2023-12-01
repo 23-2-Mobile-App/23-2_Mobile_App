@@ -61,13 +61,14 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Dance',style: TextStyle(fontFamily: 'Noto_Serif_KR')),
-                Switch(
-                  value: isDance?.value ?? false,
-                  onChanged: (value) => toggleDance(value),
-                ),
+                // Text('Dance',style: TextStyle(fontFamily: 'Noto_Serif_KR')),
+                // Switch(
+                //   value: isDance?.value ?? false,
+                //   onChanged: (value) => toggleDance(value),
+                // ),
               ],
             ),
+            SizedBox(height: 100,),
             Text(
               "Kupyer Running Club",
               style: TextStyle(
@@ -77,26 +78,48 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             const SizedBox(height: 12),
-            ElevatedButton(
-              child: const Text('Look up'),
-              onPressed: () => isLookUp?.value = true,
-            ),
-            const SizedBox(height: 12),
-            Container(
-              width: 200,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () async {
-                  bool success =
-                  await _authProvider.signInWithGoogle(context);
-                  if (success) {
-                    Navigator.pushNamedAndRemoveUntil(context, '/' , (route) => false);
-                  }
-                },
-                child: Text('GOOGLE',style: TextStyle(fontFamily: 'Noto_Serif_KR',
-                ),),
+            // ElevatedButton(
+            //   child: const Text('Look up'),
+            //   onPressed: () => isLookUp?.value = true,
+            // ),
+            const SizedBox(height: 100),
+          Container(
+            width: 200,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: () async {
+                bool success = await _authProvider.signInWithGoogle(context);
+                if (success) {
+                  Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.black12, // Background color
+                onPrimary: Colors.white, // Text color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // Rounded corners
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.android, // Replace with your preferred icon
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 8), // Add spacing between icon and text
+                  Text(
+                    'GOOGLE',
+                    style: TextStyle(
+                      fontFamily: 'Noto_Serif_KR',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
+      ),
           ],
         ),
       ),
