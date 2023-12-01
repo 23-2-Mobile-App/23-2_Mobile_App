@@ -154,13 +154,13 @@ class _HomePageState extends State<HomePage> {
                   unselectedColor: Colors.white,
                 ),
                 SalomonBottomBarItem(
-                  icon: Icon(Icons.emoji_events),
+                  icon: Icon(Icons.directions_run),
                   title: Text("Run"),
                   selectedColor: Color(0xFF51C4F2),
                   unselectedColor: Colors.white,
                 ),
                 SalomonBottomBarItem(
-                  icon: Icon(Icons.chat),
+                  icon: Icon(Icons.emoji_events),
                   title: Text("Goal"),
                   selectedColor: Color(0xFF51C4F2),
                   unselectedColor: Colors.white,
