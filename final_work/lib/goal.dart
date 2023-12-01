@@ -29,7 +29,6 @@ class _GoalPageState extends State<GoalPage> {
   Future<DocumentSnapshot<Map<String, dynamic>>> _getUserInfo() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
-
     if (user != null) {
       return FirebaseFirestore.instance.collection('users').doc(user.uid).get();
     }
@@ -94,7 +93,6 @@ class _GoalPageState extends State<GoalPage> {
         DocumentSnapshot<Map<String, dynamic>> userDocument = snapshot.data!;
         user_name = userDocument.data()?['user_name'];
         user_image = userDocument.data()?['user_image'];
-        // total_run = userDocument.data()?['total_run'] ?? 0.0;
         total_run = (userDocument.data()?['total_run'] ?? 0).toDouble();
         user_RC = userDocument.data()?['user_RC'];
         currentLevel = total_run.toDouble()*2.0;
@@ -236,13 +234,13 @@ class _GoalPageState extends State<GoalPage> {
                 unselectedColor: Colors.white,
               ),
               SalomonBottomBarItem(
-                icon: Icon(Icons.emoji_events),
+                icon: Icon(Icons.directions_run),
                 title: Text("Run"),
                 selectedColor: Color(0xFF51C4F2),
                 unselectedColor: Colors.white,
               ),
               SalomonBottomBarItem(
-                icon: Icon(Icons.chat),
+                icon: Icon(Icons.emoji_events),
                 title: Text("Goal"),
                 selectedColor: Color(0xFF51C4F2),
                 unselectedColor: Colors.white,
