@@ -84,7 +84,7 @@ class FirebaseAuthProvider with ChangeNotifier {
         'user_name': user?.displayName,
         'sum_distance': 0,
         'sum_time': 0,
-        'user_RC': "NEED TO SET ON PROFILE PAGE",
+        'user_RC': "",
         'user_image': user?.photoURL,
         'total_run' : 0,
       });
