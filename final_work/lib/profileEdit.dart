@@ -12,14 +12,15 @@ class ProfileEditPage extends StatefulWidget {
 }
 
 class _ProfileEditState extends State<ProfileEditPage> {
-  File? _image;
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _userRCController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  User user = FirebaseAuth.instance.currentUser as User;
+  String? user_name;
+  String? user_RC;
 
   @override
   Widget build(BuildContext context) {
-    Users user= ModalRoute.of(context)!.settings.arguments as Users;
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -55,9 +56,7 @@ class _ProfileEditState extends State<ProfileEditPage> {
                     height: 120,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: _image != null
-                          ? Image.file(_image!)
-                          : const Image(image: AssetImage('assets/start_run.png')),
+                      child: const Image(image: AssetImage('assets/start_run.png')),
                     ),
                   ),
                 ],
@@ -96,7 +95,8 @@ class _ProfileEditState extends State<ProfileEditPage> {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        _updateUserProfile(user);
+                        _updateUserProfile();
+                        Navigator.pushReplacementNamed(context, '/profilePage');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
@@ -116,17 +116,39 @@ class _ProfileEditState extends State<ProfileEditPage> {
     );
   }
 
-  Future<void> _updateUserProfile(Users user) async {
+  void _getUserInfo() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      DocumentSnapshot<Map<String, dynamic>> userDocument = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+      if (userDocument.exists) {
+        user_name = user.displayName;
+        user_RC = userDocument.data()?['user_RC'];
+      }
+    }
+  }
+
+  Future<void> _updateUserProfile() async {
     try {
-      // Get the current values or use the existing ones if the corresponding text fields are empty
-      String updatedName = _userNameController.text.isNotEmpty ? _userNameController.text : user.user_name;
-      String updatedRc = _userRCController.text.isNotEmpty ? _userRCController.text : user.user_RC;
+      _getUserInfo();
+
+      // Get the current values
+      String? updatedName = _userNameController.text.isNotEmpty ? _userNameController.text : user_name;
+      String? updatedRc = _userRCController.text.isNotEmpty ? _userRCController.text : user_RC;
 
       // Prepare the data to be updated
-      Map<String, dynamic> updatedData = {
-        'user_name': updatedName,
-        'user_RC': updatedRc,
-      };
+      Map<String, dynamic> updatedData = {};
+
+      // Update only non-null fields
+      if (updatedName != null) {
+        updatedData['user_name'] = updatedName;
+      }
+
+      if (updatedRc != null) {
+        updatedData['user_RC'] = updatedRc;
+      }
 
       // Update the user information in Firestore
       await _firestore.collection('users').doc(user.uid).update(updatedData);
