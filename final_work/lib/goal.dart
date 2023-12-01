@@ -175,7 +175,7 @@ class _GoalPageState extends State<GoalPage> {
                                   ),
                                   Text('$user_name님'),
                                   SizedBox(height: 8),
-                                  Text('이번주 런닝 횟수는 $total_run회입니다'),
+                                  Text('이번주 런닝 횟수는 ${total_run.toInt()}회입니다'),
                                   SizedBox(height: 8),
                                 ],
                               ),
