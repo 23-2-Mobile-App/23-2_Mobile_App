@@ -24,7 +24,7 @@ class Users {
 
   factory Users.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    print(data['modified_user_name'] );
+    print(data['modified_user_name']);
     return Users(
       uid: doc.id,
       email: data['email'] ?? '',
@@ -36,7 +36,4 @@ class Users {
       total_run: data['total_run'] ?? '',
     );
   }
-
-
 }
-
