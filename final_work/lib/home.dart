@@ -327,7 +327,7 @@ class _HomePageState extends State<HomePage> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0, top: 4.0),
                           child: Text(
-                            '${record.pace.toStringAsFixed(2)} km/hr',
+                            '${record.pace.toStringAsFixed(2)} m/s',
                             style: TextStyle(
                               fontSize: 12,
                             ),
