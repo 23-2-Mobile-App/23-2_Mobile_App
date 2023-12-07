@@ -31,9 +31,7 @@ class FirebaseAuthProvider with ChangeNotifier {
       UserCredential userCredential = await _auth.signInWithCredential(credential);
       User? user = userCredential.user;
 
-      // Check if the user's email domain is allowed
       if (user != null && user.email != null && user.email!.endsWith('@handong.ac.kr')) {
-        // Check if the user document exists, if not, create it
         await _createOrUpdateUserDocument(user);
 
         print("구글 로그인 성공! 사용자 ID: ${user.uid}");
@@ -82,9 +80,9 @@ class FirebaseAuthProvider with ChangeNotifier {
         'uid': user?.uid,
         'email': user?.email,
         'user_name': user?.displayName,
-        'sum_distance': 0,
-        'sum_time': 0,
-        'user_RC': "",
+        'sum_distance': 0.1,
+        'sum_time': 0.1,
+        'user_RC': "NA",
         'user_image': user?.photoURL,
         'total_run' : 0,
         'goal' : 0,

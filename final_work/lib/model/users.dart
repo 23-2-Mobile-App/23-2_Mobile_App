@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Users {
   late String uid;
   late String email;
-  late int sum_distance;
-  late int sum_time;
+  late double sum_distance;
+  late double sum_time;
   late String user_RC;
   late String user_image;
   late String user_name;
@@ -30,12 +30,12 @@ class Users {
     return Users(
       uid: doc.id,
       email: data['email'] ?? '',
-      sum_distance: data['sum_distance'] ?? '',
-      sum_time: data['sum_time'] ?? '',
-      user_RC: data['user_RC'] ?? '',
-      user_image: data['user_image'] ?? 0,
+      sum_distance: data['sum_distance'] ?? 0.1,
+      sum_time: data['sum_time'] ?? 0.1,
+      user_RC: data['user_RC'] ?? 'NA',
+      user_image: data['user_image'] ?? '',
       user_name: data['user_name'] ?? '',
-      total_run: data['total_run'] ?? '',
+      total_run: data['total_run'] ?? 0,
       goal: data['total_run'] ?? 10,
     );
   }

@@ -169,7 +169,6 @@ class _SavePageState extends State<SavePage> {
                           distance: record.distance,
                           pace: record.pace,
                           time: record.time,
-                          imgURL: 'url_placeholder', // Replace with the actual image URL
                       );
 
                       CollectionReference runsCollection = FirebaseFirestore.instance.collection('users');

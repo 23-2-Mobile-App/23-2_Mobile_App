@@ -5,14 +5,12 @@ class Record {
   late double distance;
   late double pace;
   late double time;
-  late String imgURL;
 
   Record({
     required this.date,
     required this.distance,
     required this.pace,
     required this.time,
-    required this.imgURL,
   });
 
 
@@ -25,7 +23,6 @@ class Record {
       distance: data['distance'] ?? 0,
       pace: data['pace'] ?? 0,
       time: data['time'] ?? 0,
-      imgURL: '0',
     );
   }
 }

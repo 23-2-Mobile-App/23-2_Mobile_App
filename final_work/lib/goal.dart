@@ -191,10 +191,13 @@ class _GoalPageState extends State<GoalPage> {
               ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height / 17,
-                right: MediaQuery.of(context).size.width / 4 + 22,
-                child: DefaultTextStyle(
-                  style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                  child: Text('목표 런닝 횟수 $goal회'),
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: DefaultTextStyle(
+                    style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                    child: Text('목표 런닝 횟수 $goal회'),
+                  ),
                 ),
               ),
               Positioned(
