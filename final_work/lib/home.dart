@@ -77,10 +77,9 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         IconButton(
-                          icon: Icon(Icons.show_chart),
+                          icon: Icon(Icons.show_chart, color: Colors.white,),
                           iconSize: 50,
                           onPressed: () {
-                            // Toggle the showChart variable when the icon is pressed
                             setState(() {
                               showChart = !showChart;
                             });
