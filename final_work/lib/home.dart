@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(25.0, 25.0, 16.0, 25.0),
-                    child: Text(
+                    child: Text(  
                       'Running Record',
                       style: TextStyle(
                         fontSize: 25,
