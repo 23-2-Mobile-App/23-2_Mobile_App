@@ -243,7 +243,7 @@ class _HomePageState extends State<HomePage> {
           showTitles: true,
           reservedSize: 22,
           getTextStyles: (BuildContext context, double value) =>
-              TextStyle(color: Colors.white),
+              TextStyle(color: Colors.white, fontSize: 8),
           getTitles: (double value) {
             int index = value.toInt().clamp(0, records.length - 1);
             if (index >= 0 && index < records.length && spots.any((spot) => spot.x == value)) {
@@ -273,7 +273,6 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-
 
   Future<List<Widget>> _buildGridCards(
       BuildContext context, RecordProvider recordProvider) async {
