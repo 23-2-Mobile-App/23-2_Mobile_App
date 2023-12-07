@@ -60,11 +60,7 @@ flutter:
     - assets/start_run.json
     - assets/timer.json
     - assets/road.json
-
-
-
-
-
+    - assets/trophy.json
     - assets/eagle.png
   fonts:
     - family: Inter
