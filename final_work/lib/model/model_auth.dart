@@ -87,6 +87,7 @@ class FirebaseAuthProvider with ChangeNotifier {
         'user_RC': "",
         'user_image': user?.photoURL,
         'total_run' : 0,
+        'goal' : 0,
       });
     } else {
       // If the user document already exists, update it with the latest information
