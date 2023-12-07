@@ -1,4 +1,6 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,6 +29,61 @@ class _ProfilePageState extends State<ProfilePage> {
 
     throw Exception('User not authenticated');
   }
+  TextEditingController _trophyInputController = TextEditingController();
+
+  Future<void> _showTrophyInputDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter Running Goal',style: TextStyle(color: Colors.white),),
+          content: TextField(
+            controller: _trophyInputController,
+            keyboardType: TextInputType.number,
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _updateGoalInDatabase();
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _updateGoalInDatabase() async {
+    try {
+      int trophyCount = int.tryParse(_trophyInputController.text) ?? 0;
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+          'goal': trophyCount,
+        });
+
+        print('Goal updated successfully: $trophyCount');
+      }
+    } catch (error) {
+      print('Error updating goal: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to update goal'),
+        ),
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -159,6 +216,36 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 30),
                   const Divider(),
+                  const SizedBox(height: 60),
+                  IconButton(
+                    icon: Lottie.asset(
+                      'assets/trophy.json',
+                      height: 250.0,
+                      width: 250.0,
+                    ),
+                    onPressed: () {
+                      _showTrophyInputDialog(context);
+                    },
+                  ),
+                  AnimatedTextKit(
+                    animatedTexts: [
+                      TypewriterAnimatedText(
+                        "Change you Goal!",
+                        textStyle: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontStyle: FontStyle.italic,
+                          letterSpacing: 1.2,
+                        ),
+                        speed: const Duration(milliseconds: 200),
+                      ),
+                    ],
+                    totalRepeatCount: 4,
+                    pause: const Duration(milliseconds: 1000),
+                    displayFullTextOnTap: true,
+                    stopPauseOnTap: true,
+                  ),
                   const SizedBox(height: 10),
                 ],
               ),

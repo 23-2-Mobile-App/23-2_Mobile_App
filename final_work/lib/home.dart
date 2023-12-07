@@ -264,7 +264,7 @@ class _HomePageState extends State<HomePage> {
       lineBarsData: [
         LineChartBarData(
           spots: spots,
-          isCurved: true,
+          isCurved: false,
           colors: [Colors.blue],
           belowBarData: BarAreaData(show: false),
           dotData: FlDotData(show: true), // Show dots on the line chart

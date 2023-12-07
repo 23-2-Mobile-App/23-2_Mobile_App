@@ -19,6 +19,7 @@ class _GoalPageState extends State<GoalPage> {
   int _currentIndex = 2;
   String? email;
   String? user_name;
+  int? goal;
   String user_RC = "";
   String? user_image;
   double total_run = 0.0;
@@ -94,6 +95,7 @@ class _GoalPageState extends State<GoalPage> {
         user_image = userDocument.data()?['user_image'];
         total_run = (userDocument.data()?['total_run'] ?? 0).toDouble();
         user_RC = userDocument.data()?['user_RC'];
+        goal = userDocument.data()?['goal'];
         currentLevel = total_run.toDouble()*2.0;
 
         return Scaffold(
@@ -189,10 +191,10 @@ class _GoalPageState extends State<GoalPage> {
               ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height / 17,
-                right: MediaQuery.of(context).size.width / 3 + 5,
+                right: MediaQuery.of(context).size.width / 4 + 22,
                 child: DefaultTextStyle(
                   style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                  child: Text('목표 런닝 횟수 30회'),
+                  child: Text('목표 런닝 횟수 $goal회'),
                 ),
               ),
               Positioned(

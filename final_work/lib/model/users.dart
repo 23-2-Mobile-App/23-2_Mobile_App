@@ -9,6 +9,7 @@ class Users {
   late String user_image;
   late String user_name;
   late int total_run;
+  late int goal;
 
   Users({
     required this.uid,
@@ -19,6 +20,7 @@ class Users {
     required this.user_image,
     required this.user_name,
     required this.total_run,
+    required this.goal,
   });
 
 
@@ -34,6 +36,7 @@ class Users {
       user_image: data['user_image'] ?? 0,
       user_name: data['user_name'] ?? '',
       total_run: data['total_run'] ?? '',
+      goal: data['total_run'] ?? 10,
     );
   }
 }
