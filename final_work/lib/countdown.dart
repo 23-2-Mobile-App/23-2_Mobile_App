@@ -40,7 +40,7 @@ class _CountdownPageState extends State<CountdownPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF01C1FD), // 배경 색상 설정
+      backgroundColor: Colors.black, // 배경 색상 설정
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -52,7 +52,7 @@ class _CountdownPageState extends State<CountdownPage> {
                   fontSize: 96, // 폰트 크기를 두 배로 설정
                   fontWeight: FontWeight.bold, // 볼드체 설정
                   fontStyle: FontStyle.italic,
-                  color: Colors.black, // 폰트 색상 설정
+                  color: Color(0xFF01C1FD), // 폰트 색상 설정
                 ),
               ),
             if (count == 0)
@@ -61,7 +61,7 @@ class _CountdownPageState extends State<CountdownPage> {
                 style: const TextStyle(
                   fontSize: 36, // 적절한 폰트 크기로 설정
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Color(0xFF01C1FD),
                 ),
               ),
           ],
