@@ -178,12 +178,18 @@ class _SavePageState extends State<SavePage> {
                       await FirebaseFirestore.instance.runTransaction((transaction) async {
                         DocumentSnapshot snapshot = await transaction.get(runsCollection.doc(user?.uid));
                         int currentTotalRun = snapshot['total_run'] ?? 0;
+                        double sumDistance = snapshot['sum_distance'] ?? 0;
+                        double sumTime = snapshot['sum_time'] ?? 0;
 
                         // Increment the total_run value by 1
                         int newTotalRun = currentTotalRun + 1;
+                        double newSumDistance = sumDistance + record.distance;
+                        double newSumTime = sumTime + record.time;
 
                         // Update the total_run field in Firestore
                         transaction.update(runsCollection.doc(user?.uid), {'total_run': newTotalRun});
+                        transaction.update(runsCollection.doc(user?.uid), {'sum_distance': newSumDistance});
+                        transaction.update(runsCollection.doc(user?.uid), {'sum_time': newSumTime});
                       });
 
                       Navigator.pop(context);
