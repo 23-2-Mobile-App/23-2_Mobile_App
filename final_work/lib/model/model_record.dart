@@ -32,7 +32,6 @@ class RecordProvider with ChangeNotifier {
     required double distance,
     required double pace,
     required double time,
-    required String imgURL,
   }) async {
     try {
 
@@ -44,7 +43,6 @@ class RecordProvider with ChangeNotifier {
         'distance': distance,
         'pace': pace,
         'time': time,
-        'imgURL': imgURL,
       });
       notifyListeners();
     } catch (e) {
