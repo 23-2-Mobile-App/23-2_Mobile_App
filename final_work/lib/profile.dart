@@ -37,23 +37,25 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Enter Running Goal',style: TextStyle(color: Colors.white),),
+          backgroundColor: Color(0xFF141926), // Set background color
           content: TextField(
             controller: _trophyInputController,
             keyboardType: TextInputType.number,
+            style: TextStyle(color: Colors.white), // Set text color
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Colors.white)),
             ),
             TextButton(
               onPressed: () {
                 _updateGoalInDatabase();
                 Navigator.of(context).pop();
               },
-              child: Text('Save'),
+              child: Text('Save', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
