@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'dart:ui' as dui;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +38,6 @@ class _RunPageState extends State<RunPage> {
   List<LatLng> _polylineCoordinates = [];
   late StreamSubscription<Position> _locationSubscription;
   String? userEmail;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late Record currentRecord = Record(
     date: Timestamp.now(),
