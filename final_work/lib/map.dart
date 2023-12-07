@@ -100,6 +100,8 @@ class _MapScreenState extends State<MapScreen> {
     final cameraPosition = CameraPosition(
       target: LatLng(position.latitude, position.longitude),
       zoom: 18,
+      tilt: 60, // Set the tilt to create a 3D effect
+
     );
 
     // Update the map camera
@@ -183,6 +185,8 @@ class _MapScreenState extends State<MapScreen> {
             initialCameraPosition: const CameraPosition(
               target: LatLng(37.532600, 127.024612),
               zoom: 18,
+              tilt: 60, // Set the tilt to create a 3D effect
+
             ),
             myLocationEnabled: _myLocationEnabled,
             myLocationButtonEnabled: true, // Enable the my location button

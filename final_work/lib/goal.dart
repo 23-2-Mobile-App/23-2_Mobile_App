@@ -66,14 +66,13 @@ class _GoalPageState extends State<GoalPage> {
       future: _getUserInfo(),
       builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: Text(
-              'Loading...',
+          return const Center(
+            child: DefaultTextStyle(
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-              ),
+              ), child: Text('Loading...'),
             ),
           );
         } else if (snapshot.hasError) {
@@ -190,17 +189,22 @@ class _GoalPageState extends State<GoalPage> {
               ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height / 17,
-                right: MediaQuery.of(context).size.width / 3 + 10,
+                right: MediaQuery.of(context).size.width / 3 + 5,
                 child: DefaultTextStyle(
                   style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                  child: Text('이제까지 런닝 횟수 7'),
+                  child: Text('목표 런닝 횟수 30회'),
                 ),
               ),
               Positioned(
-                bottom: 16,
-                right: 16,
+                bottom: 440,
+                right: 260,
                 child: ElevatedButton(
-                  child: const Text('Look up'),
+        style: ElevatedButton.styleFrom(
+        primary: Colors.transparent,
+        elevation: 0,
+        ),
+
+                  child: const Text('Click me!',style: TextStyle(color: Colors.white),),
                   onPressed: () => isLookUp?.value = true,
                 ),
               ),

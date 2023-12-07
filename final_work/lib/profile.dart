@@ -34,14 +34,13 @@ class _ProfilePageState extends State<ProfilePage> {
       future: _getUserInfo(),
       builder: (context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: Text(
-              'Loading...',
+          return  const Center(
+            child: DefaultTextStyle(
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-              ),
+              ), child: Text('Loading...'),
             ),
           );
         } else if (snapshot.hasError) {

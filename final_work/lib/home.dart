@@ -7,7 +7,8 @@ import 'package:provider/provider.dart';
 import 'model/model_auth.dart';
 import 'model/model_record.dart';
 import 'model/record.dart';
-import 'model/users.dart';
+import 'dart:math' as math;
+import 'package:fl_chart/fl_chart.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,8 +20,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   FirebaseAuthProvider _firebaseAuthProvider = FirebaseAuthProvider();
-  int _currentIndex = 0;
+  bool showChart = false; // Variable to control whether to show the chart or not
 
+  int _currentIndex = 0;
+  late List<Record> records;
   @override
   Widget build(BuildContext context) {
     return Consumer<RecordProvider>(
@@ -39,6 +42,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
                   Padding(
                     padding: const EdgeInsets.fromLTRB(25.0, 40.0, 16.0, 16.0),
                     child: Row(
@@ -73,9 +77,28 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
+                        IconButton(
+                          icon: Icon(Icons.show_chart),
+                          iconSize: 50,
+                          onPressed: () {
+                            // Toggle the showChart variable when the icon is pressed
+                            setState(() {
+                              showChart = !showChart;
+                            });
+                          },
+                        ),
                       ],
                     ),
                   ),
+                  if (showChart)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: LineChart(
+                          _buildLineChart(records),
+                        ),
+                      ),
+                    ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(25.0, 25.0, 16.0, 25.0),
                     child: Text(
@@ -112,7 +135,6 @@ class _HomePageState extends State<HomePage> {
                         if (!snapshot.hasData || snapshot.data == null) {
                           return Text('No data available');
                         }
-
                         return GridView.count(
                           crossAxisCount: 2,
                           padding: const EdgeInsets.all(16.0),
@@ -179,11 +201,86 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  LineChartData _buildLineChart(List<Record>? records) {
+    if (records == null || records.isEmpty) {
+      // records가 null이거나 비어있을 때 빈 컨테이너 반환
+      return LineChartData(); // 빈 컨테이너 반환 또는 원하는 다른 기본값 설정
+    }
+
+    // records.date를 기준으로 정렬
+    records.sort((a, b) => a.date.toDate().compareTo(b.date.toDate()));
+
+    List<FlSpot> spots = [];
+
+    // Create data points for the line chart using date and distance
+    for (int i = 0; i < records.length; i++) {
+      DateTime date = records[i].date.toDate();
+      double distance = records[i].distance;
+      spots.add(FlSpot(i.toDouble(), distance));
+    }
+
+    // Customize other aspects of the line chart as needed
+    return LineChartData(
+      gridData: FlGridData(show: true, drawVerticalLine: false),
+      titlesData: FlTitlesData(
+        leftTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 28,
+          margin: 12,
+          getTextStyles: (BuildContext context, double value) =>
+              TextStyle(color: Colors.white, fontSize: 10),
+          getTitles: (value) {
+            // Y축 레이블을 5km 간격으로 표시
+            if (value == 0) {
+              return '0';
+            } else if (value % 1000 == 0) {
+              return '${(value / 1000).toInt()} km';
+            } else {
+              return '';
+            }
+          },
+        ),
+        bottomTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 22,
+          getTextStyles: (BuildContext context, double value) =>
+              TextStyle(color: Colors.white),
+          getTitles: (double value) {
+            int index = value.toInt().clamp(0, records.length - 1);
+            if (index >= 0 && index < records.length && spots.any((spot) => spot.x == value)) {
+              return DateFormat('MM/dd').format(records[index].date.toDate());
+            }
+            return '';
+          },
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(color: Colors.white),
+      ),
+      minX: 0,
+      maxX: records.length.toDouble() - 1,
+      minY: 0,
+      maxY: records.map((record) => record.distance).reduce(math.max).toDouble(),
+      lineBarsData: [
+        LineChartBarData(
+          spots: spots,
+          isCurved: true,
+          colors: [Colors.blue],
+          belowBarData: BarAreaData(show: false),
+          dotData: FlDotData(show: true), // Show dots on the line chart
+          // belowSpotsLine: const BorderSide(color: Colors.transparent),
+        ),
+      ],
+    );
+  }
+
+
   Future<List<Widget>> _buildGridCards(
       BuildContext context, RecordProvider recordProvider) async {
     List<Widget> cards = [];
     try {
-      List<Record> records = await recordProvider.getRecords();
+       records = await recordProvider.getRecords();
       for (Record record in records) {
         Widget card = Card(
           clipBehavior: Clip.antiAlias,

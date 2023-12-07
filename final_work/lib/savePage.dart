@@ -105,7 +105,7 @@ class _SavePageState extends State<SavePage> {
                         _buildRunInfo(
                           lottieAsset: 'assets/road.json',
                           label: 'Distance',
-                          value: '${record.distance.toStringAsFixed(2)} m',
+                          value: '${(record.distance / 1000).toStringAsFixed(2)} km',
                         ),
                         SizedBox(height: 10),
                         _buildRunInfo(
