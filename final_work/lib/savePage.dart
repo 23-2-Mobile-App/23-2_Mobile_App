@@ -57,13 +57,6 @@ class _SavePageState extends State<SavePage> {
           backgroundColor: Color(0xFF01C1FD),
           body: Center(
             child: Container(
-              // decoration: const BoxDecoration(
-              //   gradient: LinearGradient(
-              //     colors: [Color(0xFF080910), Color(0xFF141926)],
-              //     begin: Alignment.topCenter,
-              //     end: Alignment.bottomCenter,
-              //   ),
-              // ),
               color: Color(0xFF01C1FD),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -139,7 +132,7 @@ class _SavePageState extends State<SavePage> {
                             fontStyle: FontStyle.italic,
                             letterSpacing: 1.2,
                           ),
-                          speed: const Duration(milliseconds: 200),
+                          speed: const Duration(milliseconds: 100),
                         ),
                       ],
                       totalRepeatCount: 4,
