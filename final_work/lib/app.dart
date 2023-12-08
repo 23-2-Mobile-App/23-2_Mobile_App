@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shrine/detail.dart';
-import 'package:shrine/add.dart';
-import 'package:shrine/edit.dart';
 import 'package:shrine/profileEdit.dart';
 import 'package:shrine/runPage.dart';
 import 'package:shrine/profile.dart';
-
 import 'package:shrine/savePage.dart';
 import 'package:shrine/goal.dart';
-import 'package:shrine/wish_list.dart';
 import 'countdown.dart';
 import 'login.dart';
 import 'map.dart';
