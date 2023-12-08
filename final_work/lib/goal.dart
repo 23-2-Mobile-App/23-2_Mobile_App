@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:rive/rive.dart' as rive; // Import Rive with an alias
+import 'package:rive/rive.dart' as rive;
 
 class GoalPage extends StatefulWidget {
   const GoalPage({Key? key}) : super(key: key);
