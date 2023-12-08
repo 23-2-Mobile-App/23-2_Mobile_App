@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:core';
-import 'dart:typed_data';
-import 'dart:ui' as dui;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
